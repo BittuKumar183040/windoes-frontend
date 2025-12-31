@@ -1,0 +1,143 @@
+@import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+@import "tailwindcss";
+
+:root {
+  font-family: "Nunito", sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  font-size: 11px;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
+
+/* custom animation */
+@keyframes slideUp1 {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes slideUp2 {
+  0% {
+    opacity: 0;
+    transform: translateY(300px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slideUp1 {
+  animation: slideUp1 0.25s ease-out;
+}
+
+.animate-slideUp2 {
+  animation: slideUp2 0.25s ease-out;
+}
+
+* {
+  cursor: url('/cursors/normal-select_white.cur'), default;
+}
+
+input, textarea, .input, .input * {
+  cursor: url('/cursors/text-select_white.cur'), text;
+}
+
+.link * {
+  cursor: url('/cursors/link-select_white.cur'), text;
+}
+
+.inner-rounded {
+  --tabGirth: 7px;
+  clip-path: shape(
+    from bottom left,
+    curve to var(--tabGirth) calc(100% - var(--tabGirth)) with var(--tabGirth) 100%,
+    vline to var(--tabGirth),
+    curve to calc(var(--tabGirth) * 2) 0 with var(--tabGirth) 0,
+    hline to calc(100% - calc(var(--tabGirth) * 2)),
+    curve to calc(100% - var(--tabGirth)) var(--tabGirth) with
+      calc(100% - var(--tabGirth)) 0,
+    vline to calc(100% - var(--tabGirth)),
+    curve to 100% 100% with calc(100% - var(--tabGirth)) 100%
+  );
+}
+
+.window-titlebar,
+.window-titlebar button {
+  forced-color-adjust: none;
+}
+
+.no-drag {
+  user-select: none;
+  -webkit-user-drag: none;
+}
+::-webkit-scrollbar {
+  width: 1px;
+  height: 1px;
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #8a8a8a;
+  border-radius: 10px;
+}
+/* 
+::-webkit-scrollbar-thumb:hover {
+  background: #8a8a8a;
+} */
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #8a8a8a transparent;
+}
