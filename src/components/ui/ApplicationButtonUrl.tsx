@@ -13,7 +13,6 @@ type ApplicationIconProps = {
 
 const ApplicationButton: React.FC<ApplicationIconProps> = ({
   icon,
-  name,
   active,
   isClosed,
   isMinimized,

@@ -1,5 +1,5 @@
 import { ChevronRight } from 'lucide-react';
-import React, { useState, type ReactNode } from 'react'
+import { useState, type ReactNode } from 'react'
 
 interface WindowProps {
   children: ReactNode;

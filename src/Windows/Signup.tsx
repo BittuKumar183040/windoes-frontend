@@ -11,7 +11,7 @@ const Signup = () => {
   const [isSliderLoaded, setIsSliderLoaded] = useState(true);
   const [isIncorrectPasswordState, setIsIncorrectPasswordState] = useState(false);
   const [password, setPassword] = useState("SecurePass123!");
-  const [usernameOrEmail, setUsernameOrEmail] = useState(localStorage.getItem("email") || "red@example.com");
+  const [usernameOrEmail] = useState(localStorage.getItem("email") || "red@example.com");
   const [switchUser, setSwitchUser] = useState(false)
 
   const handleSlideup = () => {
