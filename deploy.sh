@@ -2,7 +2,7 @@
 set -e
 
 APP_NAME="frontend"
-CONTAINER_NAME="frontend"
+CONTAINER_NAME="windoes-frontend"
 ENV_FILE=".env"
 
 if [ -f "$ENV_FILE" ]; then
@@ -27,14 +27,14 @@ COMMIT_HASH=$(git rev-parse --short HEAD)
 IMAGE_TAG="${APP_NAME}:${COMMIT_HASH}"
 
 echo "▶ Building image: $IMAGE_TAG"
-podman build -t "$IMAGE_TAG" .
+podman build -t "$IMAGE_TAG" -t "${APP_NAME}:latest" .
 
 echo "▶ Stopping old container (if exists)..."
 podman stop "$CONTAINER_NAME" 2>/dev/null || true
 podman rm "$CONTAINER_NAME" 2>/dev/null || true
 
 echo "▶ Running new container on port $PORT → 80.."
-podman run -d --name "$CONTAINER_NAME" --restart=always --env-file "$ENV_FILE" -p "${PORT}:80" "$IMAGE_TAG"
+podman run -d --name "$CONTAINER_NAME" --network windoes-net --restart=always -p "${PORT}:80" "$IMAGE_TAG"
 
 echo "▶ Cleaning old images..."
 podman image prune -f
