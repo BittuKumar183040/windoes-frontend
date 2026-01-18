@@ -3,12 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import * as motion from "motion/react-client"
 import background from "../assets/desktop_backgroud.jpg"
 import { Grip } from 'lucide-react';
-import backendAPI from '../components/utility/helper/apiRequestService';
 import SwitchUser from '../components/ui/Signup/SwitchUser';
 import UserSwitch from '../components/ui/Signup/SwitchBtn';
 import TextInput from '../components/ui/input/TextInput';
 import { ConfirmButton } from '../components/ui/input/Buttons';
 import type { User } from '../types/User';
+import { login } from '../api/auth.api';
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -38,9 +38,9 @@ const Signup = () => {
       const usernameOrEmail = user.username || user.email;
       const payload = { usernameOrEmail, password };
 
-      const response = await backendAPI.post("/auth/login", payload);
-      localStorage.setItem("user", JSON.stringify(response.data.user))
-      setUser(response.data.user)
+      const data = await login(payload)
+      localStorage.setItem("user", JSON.stringify(data.user))
+      setUser(data.user)
       navigate('/desktop')
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -91,7 +91,7 @@ const Signup = () => {
               </>
                 : <>
                   <Grip size={50} />
-                  <p className=' text-3xl'>Enter Your Pin</p>
+                  <p className=' text-3xl'>Enter Your Password</p>
                   <TextInput
                     type="text"
                     value={password}
@@ -110,6 +110,9 @@ const Signup = () => {
             <UserSwitch label={user.name} onClick={handleLoggedUser} />
             <UserSwitch label="Switch User" onClick={handleSwitchUser} />
           </div>
+          {/* <div className=' absolute right-5 bottom-5 flex flex-col gap-1'>
+            <button>Register</button>
+          </div> */}
         </motion.div>
       }
     </div>

@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react"
 import TextInput from "../input/TextInput";
-import backendAPI from "../../utility/helper/apiRequestService";
 import { isAxiosError } from "axios";
 import type { User } from "../../../types/User";
 import { useNavigate } from "react-router-dom";
+import { getUserByKeyword } from "../../../api/user.api";
+import { login } from "../../../api/auth.api";
 
 const SwitchUser = () => {
   const [usernameOrEmail, setUsernameOrEmail] = useState("");
@@ -16,15 +17,14 @@ const SwitchUser = () => {
   const passwordRef = useRef<HTMLInputElement>(null);
 
   const checkUserExists = async (keyword: string) => {
+    if (keyword.length < 1) { return 0 }
     try {
-      if (keyword.length < 1) {
-        return 0;
-      }
+
       setIsLoading(true)
-      const response = await backendAPI.get(`/users/keyword/${keyword}`);
+      const data = await getUserByKeyword(keyword)
       setErrorMsg(null);
-      setUser(response.data);
-      localStorage.setItem("user", JSON.stringify(response.data))
+      setUser(data);
+      localStorage.setItem("user", JSON.stringify(data))
 
     } catch (error: unknown) {
       if (isAxiosError(error)) {
@@ -43,10 +43,11 @@ const SwitchUser = () => {
     try {
       setIsLoading(true)
       const payload = { usernameOrEmail, password };
-      const response = await backendAPI.post("/auth/login", payload);
+      const data = await login(payload)
+      console.log(data)
       setErrorMsg(null);
-      setUser(response.data);
-      localStorage.setItem("usernameOrEmail", usernameOrEmail)
+      setUser(data.user);
+      localStorage.setItem("user", JSON.stringify(data.user))
       navigate('/desktop')
     } catch (error: unknown) {
       if (isAxiosError(error)) {

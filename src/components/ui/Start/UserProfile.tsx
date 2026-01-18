@@ -1,6 +1,9 @@
+import type { User } from "../../../types/User"
 
 const UserProfile = ({ onClick }: { onClick: ()=>void }) => {
-
+  const user = localStorage.getItem('user')
+    ? (JSON.parse(localStorage.getItem('user')!) as User)
+    : null;
   return (
     <div onClick={onClick} className="flex items-center gap-3 p-3 hover:bg-gray-100/30 rounded-md">
       <div className="w-10 h-10 flex items-center justify-center rounded-full overflow-hidden">
