@@ -3,6 +3,7 @@ import ToolTipNavbar from "../ToolTipNavbar";
 import { Download, Power, Settings } from "lucide-react";
 import UserProfile from "./UserProfile";
 import { AnimatePresence, motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 type StartMenuProps = {
   open: boolean;
@@ -11,7 +12,7 @@ type StartMenuProps = {
 
 const StartMenu = forwardRef<HTMLDivElement, StartMenuProps>(
   ({ open, buttonRef }, ref) => {
-
+    const navigate = useNavigate();
     const startContainerRef = useRef<HTMLDivElement | null>(null);
     const profileDetailsRef = useRef<HTMLDivElement | null>(null);
 
@@ -37,7 +38,11 @@ const StartMenu = forwardRef<HTMLDivElement, StartMenuProps>(
     }, []);
 
     const handleProfileClick = () => {
-      setShowProfile(true)
+      setShowProfile(true);
+    }
+
+    const handleSignout = () => {
+      navigate("/signup");
     }
 
     return (
@@ -60,6 +65,7 @@ const StartMenu = forwardRef<HTMLDivElement, StartMenuProps>(
                     <img src="./other/bqpsim.svg" className=" h-10" />
                     <p className=" text-md font-bold">BosonQ Psi Tech. Pvt. Ltd.</p>
                   </div>
+                  <button onClick={handleSignout} className=" p-2 px-3 bg-transparent hover:bg-black/5 rounded-md transition-all">Sign Out</button>
                 </div>
                 <div className={`flex gap-5 items-center`}>
                   <img src="./other/self.jpg" className=" h-24 rounded-full" />
