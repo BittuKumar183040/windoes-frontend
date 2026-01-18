@@ -27,3 +27,12 @@ export const getUserProfileImage = async (id: string): Promise<string> => {
   await storeImage(cacheKey, response.data);
   return URL.createObjectURL(response.data);
 };
+
+export const checkUserExistance = async (username: string): Promise<boolean> => {
+
+  const { data } = await backendAPI.get(
+    API_ENDPOINTS.USERS.BY_USERNAME(username)
+  );
+
+  return data.available;
+}

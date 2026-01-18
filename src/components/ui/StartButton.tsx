@@ -2,7 +2,6 @@ import React, { forwardRef, useRef, useImperativeHandle, useState } from "react"
 import { TASKBAR_ICON_RADIUS, TASKBAR_ICON_SIZE_BOUND, TASKBAR_START_LEAF_SIZE } from "../../config/setting";
 import ToolTipNavbar from "./ToolTipNavbar";
 import StartIcon from "./Start/StartIcon";
-import { Circle } from "lucide-react";
 
 type StartButtonProps = {
   active?: boolean;
@@ -35,7 +34,7 @@ const StartButton = forwardRef<HTMLDivElement, StartButtonProps>(({ active, onCl
       onMouseLeave={()=> setShowTip(false)}
       onClick={handleClick}
       style={{
-        width: TASKBAR_ICON_SIZE_BOUND-1,
+        width: TASKBAR_ICON_SIZE_BOUND - 1,
         height: TASKBAR_ICON_SIZE_BOUND,
       }}
       className={` flex items-center justify-center shrink-0

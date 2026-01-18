@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import * as motion from "motion/react-client"
 import background from "../assets/desktop_backgroud.jpg"
-import { Grip } from 'lucide-react';
+import { Grip, UserRoundPlus } from 'lucide-react';
 import SwitchUser from '../components/ui/Signup/SwitchUser';
 import UserSwitch from '../components/ui/Signup/SwitchBtn';
 import TextInput from '../components/ui/input/TextInput';
@@ -79,6 +79,10 @@ const Signup = () => {
     setSwitchUser(false);
   }
 
+  const handleRegisterUser = () => {
+    navigate('/register');
+  }
+
   return (
     <div onContextMenu={(e) => e.preventDefault()} className='relative h-dvh w-full overflow-hidden'>
       <motion.div
@@ -133,9 +137,12 @@ const Signup = () => {
             <UserSwitch imgSrc={logo} label={user.name} onClick={handleLoggedUser} />
             <UserSwitch label="Switch User" onClick={handleSwitchUser} />
           </div>
-          {/* <div className=' absolute right-5 bottom-5 flex flex-col gap-1'>
-            <button>Register</button>
-          </div> */}
+          <div className=' absolute right-5 bottom-5 flex flex-col gap-1'>
+            <button onClick={handleRegisterUser} className=' flex items-center text-white/80 gap-2 justify-between p-2 px-4 bg-black/20 rounded-md '>
+              <UserRoundPlus size={15} />
+              <p className=' text-md translate-y-px '>Register</p>
+            </button>
+          </div>
         </motion.div>
       }
     </div>
