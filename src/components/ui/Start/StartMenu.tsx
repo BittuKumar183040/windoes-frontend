@@ -4,21 +4,41 @@ import { Download, Power, Settings } from "lucide-react";
 import UserProfile from "./UserProfile";
 import { AnimatePresence, motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import type { User } from "../../../types/User";
+import { getUserProfileImage } from "../../../api/user.api";
 
 type StartMenuProps = {
   open: boolean;
   buttonRef: React.RefObject<HTMLDivElement | null>;
 };
 
+const user: User | null = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")!) : null;
+
 const StartMenu = forwardRef<HTMLDivElement, StartMenuProps>(
   ({ open, buttonRef }, ref) => {
     const navigate = useNavigate();
     const startContainerRef = useRef<HTMLDivElement | null>(null);
     const profileDetailsRef = useRef<HTMLDivElement | null>(null);
+    const [logo, setLogo] = useState<string>("");
 
     const [showProfile, setShowProfile] = useState(false);
 
     useImperativeHandle(ref, () => startContainerRef.current as HTMLDivElement);
+
+    const fetchLogo = async (id: string) => {
+      if (!id) return;
+      try {
+        const image = await getUserProfileImage(id);
+        setLogo(image);
+      } catch (error: unknown) {
+        console.error('Failed to load profile image', error);
+      }
+    };
+
+    useEffect(() => {
+      if (!user?.id) return;
+      fetchLogo(user.id);
+    }, [user?.id]);
 
     useEffect(() => {
       const handleOutsideClick = (e: MouseEvent) => {
@@ -62,16 +82,16 @@ const StartMenu = forwardRef<HTMLDivElement, StartMenuProps>(
               >
                 <div className=" flex justify-between items-center">
                   <div className=" flex gap-2 items-center">
-                    <img src="./other/bqpsim.svg" className=" h-10" />
+                    {/* <img src="./other/bqpsim.svg" className=" h-10" /> */}
                     <p className=" text-md font-bold">BosonQ Psi Tech. Pvt. Ltd.</p>
                   </div>
                   <button onClick={handleSignout} className=" p-2 px-3 bg-transparent hover:bg-black/5 rounded-md transition-all">Sign Out</button>
                 </div>
                 <div className={`flex gap-5 items-center`}>
-                  <img src="./other/self.jpg" className=" h-24 rounded-full" />
+                  <img src={logo} alt={user?.name} className=" size-20 shrink-0 rounded-full" />
                   <div>
-                    <strong className=" text-xl">Bittu Kumar</strong>
-                    <p className=" text-sm">bk183040@gmail.com</p>
+                    <strong className=" text-xl">{user?.name}</strong>
+                    <p className=" text-sm">{user?.email}</p>
                   </div>
                 </div>
               </motion.div>
@@ -106,7 +126,7 @@ const StartMenu = forwardRef<HTMLDivElement, StartMenuProps>(
 
           <div className="flex items-center justify-between py-4 px-12 bg-[#dddbe3]/85">
             <div className={`${showProfile && "pointer-events-none"} `}>
-              <UserProfile onClick={handleProfileClick} />
+              <UserProfile label={user?.name} src={logo} onClick={handleProfileClick} />
             </div>
             <div className="flex items-center">
               <button className="flex gap-4 p-4 rounded-md hover:bg-gray-100/70 transition" >

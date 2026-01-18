@@ -3,8 +3,9 @@ import TextInput from "../input/TextInput";
 import { isAxiosError } from "axios";
 import type { User } from "../../../types/User";
 import { useNavigate } from "react-router-dom";
-import { getUserByKeyword } from "../../../api/user.api";
+import { getUserByKeyword, getUserProfileImage } from "../../../api/user.api";
 import { login } from "../../../api/auth.api";
+import { CircleUserRound } from "lucide-react";
 
 const SwitchUser = () => {
   const [usernameOrEmail, setUsernameOrEmail] = useState("");
@@ -12,6 +13,8 @@ const SwitchUser = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
+  const [isLogoLoading, setLogoLoading] = useState<boolean>(false)
+  const [logo, setLogo] = useState<string | null>(null);
 
   const navigate = useNavigate();
   const passwordRef = useRef<HTMLInputElement>(null);
@@ -19,7 +22,6 @@ const SwitchUser = () => {
   const checkUserExists = async (keyword: string) => {
     if (keyword.length < 1) { return 0 }
     try {
-
       setIsLoading(true)
       const data = await getUserByKeyword(keyword)
       setErrorMsg(null);
@@ -62,9 +64,26 @@ const SwitchUser = () => {
     }
   }
 
+  const fetchLogo = async (id: string) => {
+    if (!id) return;
+    try {
+      setLogoLoading(true);
+      const image = await getUserProfileImage(id);
+      setLogo(image);
+      
+    } catch (error: unknown) {
+      console.error('Failed to load profile image', error);
+    } finally {
+      setLogoLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (user?.id) {
       passwordRef.current?.focus();
+    }
+    if (user && user.id) {
+      fetchLogo(user.id);
     }
   }, [user]);
 
@@ -80,7 +99,12 @@ const SwitchUser = () => {
 
   return (
     <div className=' flex flex-col gap-6 justify-between items-center h-fit'>
-      <div className=' h-60 w-60 shrink-0 bg-amber-100 rounded-full'></div>
+      <div className=' h-60 w-60 shrink-0 bg-amber-100 rounded-full overflow-hidden'>
+        {user ?
+          logo ? <img src={logo} alt={user.name} /> : <CircleUserRound className='h-full w-full scale-130 text-gray-600' strokeWidth={0.5} />
+          : <CircleUserRound className='h-full w-full scale-130 text-gray-600' strokeWidth={0.5} />
+        }
+      </div>
       <p className=' text-4xl font-bold tracking-wide'>{user ? user?.name : "Switch User"}</p>
       {<p className={` text-red-300 ${errorMsg ? "block" : " invisible"}`}>Error: {errorMsg}</p>}
 

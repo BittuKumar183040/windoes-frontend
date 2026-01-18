@@ -9,6 +9,7 @@ import TextInput from '../components/ui/input/TextInput';
 import { ConfirmButton } from '../components/ui/input/Buttons';
 import type { User } from '../types/User';
 import { login } from '../api/auth.api';
+import { getUserProfileImage } from '../api/user.api';
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -16,6 +17,8 @@ const Signup = () => {
   const [isIncorrectPasswordState, setIsIncorrectPasswordState] = useState(false);
   const [password, setPassword] = useState("SecurePass123!");
   const [switchUser, setSwitchUser] = useState(false);
+  const [isLogoLoading, setLogoLoading] = useState(false);
+  const [logo, setLogo] = useState<string | null>(null);
 
   const [user, setUser] = useState<User>(() => {
     const storedUser = localStorage.getItem("user");
@@ -31,9 +34,12 @@ const Signup = () => {
     if (!localStorage.getItem("user")) {
       setSwitchUser(true);
     }
+    if (user && user.id) {
+      fetchLogo(user.id);
+    }
   }, []);
 
-  const hitApi = async () => {
+  const loginUser = async () => {
     try {
       const usernameOrEmail = user.username || user.email;
       const payload = { usernameOrEmail, password };
@@ -52,6 +58,19 @@ const Signup = () => {
     }
   };
 
+  const fetchLogo = async (id: string) => {
+    if (!id) return;
+    try {
+      setLogoLoading(true);
+      const image = await getUserProfileImage(id);
+      setLogo(image);
+
+    } catch (error: unknown) {
+      console.error('Failed to load profile image', error);
+    } finally {
+      setLogoLoading(false);
+    }
+  };
   const handleSwitchUser = async () => {
     setSwitchUser(true);
   }
@@ -80,7 +99,11 @@ const Signup = () => {
         >
           {switchUser === false ?
             <div className=' flex flex-col gap-6 justify-between items-center h-fit'>
-              <div className=' h-60 w-60 shrink-0 bg-amber-100 rounded-full'></div>
+              <div className=' h-60 w-60 shrink-0 rounded-full overflow-hidden'>
+                { logo && !isLogoLoading && (
+                  <img src={logo} alt="Profile" className="h-full w-full object-cover" />
+                )}
+              </div>
               <p className=' text-4xl font-bold tracking-wide'>{user.name}</p>
               {isIncorrectPasswordState ? <>
                 <p className=' text-white text-lg'>The PIN is incorrect. Try again.</p>
@@ -95,7 +118,7 @@ const Signup = () => {
                   <TextInput
                     type="text"
                     value={password}
-                    onEnterPress={() => hitApi()}
+                    onEnterPress={() => loginUser()}
                     onChange={(value: string) => setPassword(value)} placeholder='PIN'
                     autoFocus
                   />
@@ -107,7 +130,7 @@ const Signup = () => {
             <SwitchUser />
           }
           <div className=' absolute left-5 bottom-5 flex flex-col gap-1'>
-            <UserSwitch label={user.name} onClick={handleLoggedUser} />
+            <UserSwitch imgSrc={logo} label={user.name} onClick={handleLoggedUser} />
             <UserSwitch label="Switch User" onClick={handleSwitchUser} />
           </div>
           {/* <div className=' absolute right-5 bottom-5 flex flex-col gap-1'>
