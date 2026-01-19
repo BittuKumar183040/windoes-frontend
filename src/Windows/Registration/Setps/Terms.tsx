@@ -12,14 +12,14 @@ const TermsAndConditions = () => {
         and architectural understanding.
       </p>
 
-      <p>
+      <div>
         All visual assets, illustrations, icons, and UI elements used in this application are either:
         <ul className="list-disc pl-6">
           <li>Generated using AI tools</li>
           <li>Custom-designed by the developer</li>
           <li>Sourced from open-source or freely available resources</li>
         </ul>
-      </p>
+      </div>
 
       <p>
         This project is <strong>inspired by Windows architecture and UI design principles</strong>.

@@ -1,4 +1,4 @@
-import { useState, type ComponentType } from 'react';
+import { useEffect, useState, type ComponentType } from 'react';
 import { RegistrationStep, type RegistrationStepProps } from './registrationSteps';
 
 import Country from './Setps/Country';
@@ -27,6 +27,10 @@ const RegistrationFlow = () => {
 
   const next = () => setStep((s) => s + 1);
   const prev = () => setStep((s) => s - 1);
+
+  useEffect(()=>{
+    localStorage.removeItem('register_username');
+  },[])
 
   const StepComponent = stepMap[step];
   if (!StepComponent) {

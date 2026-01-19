@@ -1,5 +1,5 @@
 import { API_ENDPOINTS } from './endpoints';
-import type { User } from '../types/User';
+import type { User, UserRegistrationPayload } from '../types/User';
 import backendAPI from '../components/utility/helper/apiRequestService';
 import { getImage, storeImage } from '../components/utility/helper/indexDbHelper';
 
@@ -27,6 +27,12 @@ export const getUserProfileImage = async (id: string): Promise<string> => {
   await storeImage(cacheKey, response.data);
   return URL.createObjectURL(response.data);
 };
+
+export const registerUser = async (payload: UserRegistrationPayload) : Promise<User> => {
+  const { data } = await backendAPI.post(API_ENDPOINTS.USERS.REGISTER(), payload)
+  localStorage.setItem("user", JSON.stringify(data))
+  return data;
+}
 
 export const checkUserExistance = async (username: string): Promise<boolean> => {
 

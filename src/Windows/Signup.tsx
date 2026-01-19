@@ -138,7 +138,7 @@ const Signup = () => {
             <UserSwitch label="Switch User" onClick={handleSwitchUser} />
           </div>
           <div className=' absolute right-5 bottom-5 flex flex-col gap-1'>
-            <button onClick={handleRegisterUser} className=' flex items-center text-white/80 gap-2 justify-between p-2 px-4 bg-black/20 rounded-md '>
+            <button onClick={handleRegisterUser} className=' flex items-center text-white/80 gap-2 justify-between p-3 px-6 bg-white/10 rounded-md '>
               <UserRoundPlus size={15} />
               <p className=' text-md translate-y-px '>Register</p>
             </button>

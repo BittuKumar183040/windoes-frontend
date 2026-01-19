@@ -62,6 +62,11 @@ const Username = ({ onNext, onPrev }: RegistrationStepProps) => {
     setUsername(val);
   };
 
+  const handleConfirmUsername = () => {
+    localStorage.setItem("register_username", username);
+    onNext();
+  }
+
   const canProceed = isAllValid && isAvailable === true;
 
   return (
@@ -99,7 +104,6 @@ const Username = ({ onNext, onPrev }: RegistrationStepProps) => {
               color: "black",
               boxShadow: "0px 1px 0 rgb(23, 96, 253)",
             }}
-            isLoading={isChecking}
             loaderStyle="text-black"
           />
 
@@ -131,7 +135,7 @@ const Username = ({ onNext, onPrev }: RegistrationStepProps) => {
                 ? "bg-linear-to-r from-blue-500 to-blue-600"
                 : "bg-gray-400 cursor-not-allowed"
               }`}
-            onClick={onNext}
+            onClick={handleConfirmUsername}
           >
             Next
           </button>

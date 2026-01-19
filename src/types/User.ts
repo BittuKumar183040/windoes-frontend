@@ -8,4 +8,11 @@ interface User {
     updatedAt?: number
 }
 
-export type { User };
+interface UserRegistrationPayload {
+    username: string,
+    name: string,
+    email: string,
+    password: string
+}
+
+export type { User, UserRegistrationPayload };
