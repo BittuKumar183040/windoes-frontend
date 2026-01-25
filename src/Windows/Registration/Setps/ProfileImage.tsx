@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Button, ButtonBar } from "../../../components/ui/input/Buttons";
 import { uploadProfileImage } from "../../../api/user.api";
 import type { User } from "../../../types/User";
+import { UserProfileImage } from "../../../components/ui/UserProfile";
 
 type Props = {
   onChoose: (file: File) => void;
@@ -82,11 +83,7 @@ const ProfileImageContainer = ({ onChoose }: Props) => {
       </h3>
 
       <div className="mb-5 flex justify-center">
-        <div className=' h-60 w-60 border-4 border-gray-100/20 bg-gray-100/20 shrink-0 rounded-full overflow-hidden'>
-          {preview ? <img src={preview} alt="Profile" className="h-full w-full object-cover" />
-            : <CircleUserRound className='h-full w-full scale-140 text-gray-300' strokeWidth={0.5} />
-          }
-        </div>
+        <UserProfileImage src={preview} size={180} />
       </div>
 
       <div className="flex text-black flex-col gap-3">
@@ -157,7 +154,9 @@ const ProfileImage = ({ onNext }: { onNext: () => void }) => {
         </div>
 
         <div className=' flex gap-6 justify-end'>
-          <button className=' text-xl text-blue-600' onClick={onNext}>Skip for now</button>
+          {!canProceed &&
+            <button className=' text-xl text-blue-600' onClick={onNext}>Skip for now</button>
+          }
           <button
             disabled={!canProceed}
             className={`p-4 px-16 text-xl rounded-lg shadow-xl text-white font-medium

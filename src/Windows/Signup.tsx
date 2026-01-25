@@ -10,6 +10,8 @@ import { ConfirmButton } from '../components/ui/input/Buttons';
 import type { User } from '../types/User';
 import { login } from '../api/auth.api';
 import { getUserProfileImage } from '../api/user.api';
+import { UserProfileImage } from '../components/ui/UserProfile';
+import SliderContent from '../components/ui/Signup/Slider';
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -93,6 +95,7 @@ const Signup = () => {
         transition={{ duration: 1 }}
         onClick={handleSlideup}
       >
+        { isSliderLoaded && <SliderContent /> }
       </motion.div>
 
       {!isSliderLoaded &&
@@ -105,13 +108,7 @@ const Signup = () => {
         >
           {switchUser === false ?
             <div className=' flex flex-col gap-6 justify-between items-center h-fit'>
-              <div className=' h-60 w-60 border-4 border-gray-100/20 bg-gray-100/20 shrink-0 rounded-full overflow-hidden'>
-                { logo && !isLogoLoading ? (
-                  <img src={logo} alt="Profile" className="h-full w-full object-cover" />
-                ) :
-                <CircleUserRound className='h-full w-full scale-140 text-gray-300' strokeWidth={0.5} />
-              }
-              </div>
+              <UserProfileImage src={logo} size={200} />
               <p className=' text-4xl font-bold tracking-wide'>{user.name}</p>
               {isIncorrectPasswordState ? <>
                 <p className=' text-white text-lg'>The PIN is incorrect. Try again.</p>

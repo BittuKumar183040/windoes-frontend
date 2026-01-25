@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import type { User } from "../../../types/User";
 import { getUserProfileImage } from "../../../api/user.api";
+import { UserProfileImage } from "../UserProfile";
 
 type StartMenuProps = {
   open: boolean;
@@ -85,7 +86,7 @@ const StartMenu = forwardRef<HTMLDivElement, StartMenuProps>(
                   <button onClick={handleSignout} className=" p-2 px-3 bg-transparent hover:bg-black/5 rounded-md transition-all">Sign Out</button>
                 </div>
                 <div className={`flex gap-5 items-center`}>
-                  <img src={logo} alt={user?.name} className=" size-20 shrink-0 rounded-full" />
+                  <UserProfileImage src={logo} size={70} />
                   <div>
                     <strong className=" text-xl">{user?.name}</strong>
                     <p className=" text-sm">{user?.email}</p>
