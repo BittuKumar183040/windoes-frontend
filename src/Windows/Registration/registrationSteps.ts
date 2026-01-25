@@ -10,6 +10,7 @@ export enum RegistrationStep {
 }
 
 export interface RegistrationStepProps {
+  onClose?: () => void;
   onNext: () => void;
   onPrev?: () => void;
 }

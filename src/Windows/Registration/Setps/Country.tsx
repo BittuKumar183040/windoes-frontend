@@ -1,13 +1,20 @@
 import { useState } from 'react';
 import countries from '../../../assets/countries.json'
 import Select from '../../../components/ui/input/Select';
+import type { RegistrationStepProps } from '../registrationSteps';
+import { X } from 'lucide-react';
 
-const Country = ({ onNext }: { onNext: () => void }) => {
+const Country = ({ onNext, onClose }: RegistrationStepProps) => {
 
   const [country, setCountry] = useState("India");
 
   return (
-    <div className="flex flex-wrap h-full w-full">
+    <div className=" flex flex-wrap h-full w-full">
+      <button 
+        onClick={onClose}
+        className=' absolute flex items-center justify-center right-0 top-0 text-black size-15 shrink-0'>
+        <X />
+      </button>
       <div className="w-1/2 flex items-center justify-center opacity-80 z-10">
         <img src="/signup/earth.png" />
       </div>

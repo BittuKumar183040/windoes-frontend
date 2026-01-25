@@ -26,6 +26,7 @@ const RegistrationFlow = () => {
 
   const next = () => setStep((s) => s + 1);
   const prev = () => setStep((s) => s - 1);
+  const close = () => setStep(Object.keys(setStep).length-1)
 
   useEffect(()=>{
     localStorage.removeItem('register_username');
@@ -36,7 +37,7 @@ const RegistrationFlow = () => {
     navigate('/signup');
     return null;
   };
-  return <StepComponent onNext={next} onPrev={prev} />;
+  return <StepComponent onNext={next} onPrev={prev} onClose={close} />;
 };
 
 export default RegistrationFlow;
