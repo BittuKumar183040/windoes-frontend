@@ -24,20 +24,17 @@ const StartMenu = forwardRef<HTMLDivElement, StartMenuProps>(
     const [showProfile, setShowProfile] = useState(false);
 
     useImperativeHandle(ref, () => startContainerRef.current as HTMLDivElement);
-
-    const fetchLogo = async (id: string) => {
-      if (!id) return;
-      try {
-        const image = await getUserProfileImage(id);
-        setLogo(image);
-      } catch (error: unknown) {
-        console.error('Failed to load profile image', error);
-      }
-    };
-
     useEffect(() => {
       if (!user?.id) return;
-      fetchLogo(user.id);
+      const fetchProfileImage = async () => {
+        try {
+          setLogo(await getUserProfileImage(user.id))
+        } catch (error) {
+          console.error("Failed to fetch profile image", error);
+        }
+      };
+
+      fetchProfileImage();
     }, [user?.id]);
 
     useEffect(() => {

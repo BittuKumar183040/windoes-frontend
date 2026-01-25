@@ -5,7 +5,8 @@ export const API_ENDPOINTS = {
     REGISTER: () => '/users'
   },
   IMAGE: {
-    BY_FILETAG: (id: string, fileTag: string, status: string) => `/users/id/${id}/file/${fileTag}/download?status=${status}`
+    BY_FILETAG: (id: string, fileTag: string, status: string) => `/users/id/${id}/file/${fileTag}/download?status=${status}`,
+    UPLOAD: (id: string) => `/users/id/${id}/file/upload`
   },
   AUTH: {
     LOGIN: '/auth/login',

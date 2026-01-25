@@ -4,9 +4,9 @@ export enum RegistrationStep {
   USERNAME = 2,
   CREDENTIALS = 3,
   PROFILEIMAGE = 4,
-  PIN = 5,
-  ADDONS = 6,
-  COMPLETE = 7,
+  // PIN = 5,
+  ADDONS = 5,
+  COMPLETE = 6,
 }
 
 export interface RegistrationStepProps {

@@ -79,7 +79,6 @@ const Credentials = ({ onNext, onPrev }: RegistrationStepProps) => {
   );
 
   const handleRegistration = async () => {
-    console.log("first")
     try {
       const regUser = await registerUser(user)
       console.log(regUser)

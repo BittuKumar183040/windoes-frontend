@@ -16,7 +16,6 @@ const stepMap: Record<RegistrationStep, ComponentType<RegistrationStepProps> | n
   [RegistrationStep.USERNAME]: Username,
   [RegistrationStep.CREDENTIALS]: Credentials,
   [RegistrationStep.PROFILEIMAGE]: ProfileImage,
-  [RegistrationStep.PIN]: Pin,
   [RegistrationStep.ADDONS]: Addons,
   [RegistrationStep.COMPLETE]: null,
 };

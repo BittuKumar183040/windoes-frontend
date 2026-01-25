@@ -118,7 +118,6 @@ const Username = ({ onNext, onPrev }: RegistrationStepProps) => {
           </div>
         </div>
 
-
         <div className="flex items-center justify-between gap-4">
           <div>
             {isAllValid && isAvailable !== null && (

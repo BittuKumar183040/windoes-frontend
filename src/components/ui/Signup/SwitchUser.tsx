@@ -99,10 +99,11 @@ const SwitchUser = () => {
 
   return (
     <div className=' flex flex-col gap-6 justify-between items-center h-fit'>
-      <div className=' h-60 w-60 shrink-0 bg-amber-100 rounded-full overflow-hidden'>
+      <div className=' h-60 w-60 border-4 border-gray-100/20 bg-gray-100/20 shrink-0 rounded-full overflow-hidden'>
         {user ?
-          logo ? <img src={logo} alt={user.name} /> : <CircleUserRound className='h-full w-full scale-130 text-gray-600' strokeWidth={0.5} />
-          : <CircleUserRound className='h-full w-full scale-130 text-gray-600' strokeWidth={0.5} />
+          logo ? <img className="h-full w-full object-cover" src={logo} alt={user.name} /> : <CircleUserRound className='h-full w-full object-cover scale-130 text-gray-600' strokeWidth={0.5} />
+          : 
+          <CircleUserRound className='h-full w-full scale-140 text-gray-300' strokeWidth={0.5} />
         }
       </div>
       <p className=' text-4xl font-bold tracking-wide'>{user ? user?.name : "Switch User"}</p>
