@@ -109,7 +109,7 @@ const Signup = () => {
         >
           {switchUser === false ?
             <div className=' flex flex-col gap-6 justify-between items-center h-fit'>
-              <UserProfileImage src={logo} size={200} loading={true} />
+              <UserProfileImage src={logo} size={200} loading={isLogoLoading} />
               <p className=' text-4xl font-bold tracking-wide'>{user.name}</p>
               {isIncorrectPasswordState ? <>
                 <p className=' text-white text-lg'>The PIN is incorrect. Try again.</p>

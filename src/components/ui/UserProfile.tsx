@@ -1,4 +1,4 @@
-import { CircleUserRound } from "lucide-react"
+import { CircleUserRound, Loader2 } from "lucide-react"
 import type { ReactNode } from "react"
 
 interface UserProfileImageProps {
@@ -11,7 +11,7 @@ const ImageContainer = ({ children, size = 48 }: {children: ReactNode, size: num
   return (
     <div
       style={{ height: size + "px", width: size + "px" }}
-      className=' border-2 border-gray-100/20 bg-gray-100/20 shrink-0 rounded-full overflow-hidden'>
+      className=' relative border-2 border-gray-100/20 bg-gray-100/20 shrink-0 rounded-full overflow-hidden'>
         {children}
     </div>
   )
@@ -22,7 +22,7 @@ export const UserProfileImage = ({ src, size = 48, loading }: UserProfileImagePr
   if (loading)
     { 
       return ( <ImageContainer size={size}>
-        <p>Loading</p>
+        <Loader2 size={40} className=" absolute left-1/2 top-1/2 -translate-1/2 animate-spin" />
       </ImageContainer> ) 
     }
 
