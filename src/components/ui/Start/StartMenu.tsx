@@ -4,24 +4,22 @@ import { Download, Power, Settings } from "lucide-react";
 import UserProfile from "./UserProfile";
 import { AnimatePresence, motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import type { User } from "../../../types/User";
 import { getUserProfileImage } from "../../../api/user.api";
 import { UserProfileImage } from "../UserProfile";
+import { getUserFromLocal } from "../../utility/helper/localstorage";
 
 type StartMenuProps = {
   open: boolean;
   buttonRef: React.RefObject<HTMLDivElement | null>;
 };
 
-const user: User | null = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")!) : null;
-
 const StartMenu = forwardRef<HTMLDivElement, StartMenuProps>(
   ({ open, buttonRef }, ref) => {
     const navigate = useNavigate();
+    const user = getUserFromLocal();
     const startContainerRef = useRef<HTMLDivElement | null>(null);
     const profileDetailsRef = useRef<HTMLDivElement | null>(null);
     const [logo, setLogo] = useState<string>("");
-
     const [showProfile, setShowProfile] = useState(false);
 
     useImperativeHandle(ref, () => startContainerRef.current as HTMLDivElement);

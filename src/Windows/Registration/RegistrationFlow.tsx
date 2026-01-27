@@ -4,7 +4,6 @@ import { RegistrationStep, type RegistrationStepProps } from './registrationStep
 import Country from './Setps/Country';
 import Terms from './Setps/Terms';
 import Username from './Setps/Username';
-import Pin from './Setps/Pin';
 import Credentials from './Setps/Credentials';
 import ProfileImage from './Setps/ProfileImage';
 import Addons from './Setps/Addons';

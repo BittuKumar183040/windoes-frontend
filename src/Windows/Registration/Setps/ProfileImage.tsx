@@ -1,9 +1,9 @@
-import { CameraIcon, CircleUserRound, FolderClosed } from "lucide-react";
+import { CameraIcon, FolderClosed } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Button, ButtonBar } from "../../../components/ui/input/Buttons";
 import { uploadProfileImage } from "../../../api/user.api";
-import type { User } from "../../../types/User";
 import { UserProfileImage } from "../../../components/ui/UserProfile";
+import { getUserFromLocal } from "../../../components/utility/helper/localstorage";
 
 type Props = {
   onChoose: (file: File) => void;
@@ -126,13 +126,14 @@ const ProfileImage = ({ onNext }: { onNext: () => void }) => {
   const [error, setError] = useState<string | null>(null);
  
   const handleChoose = async (file: File) => {
-    const user: User | null = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")!) : null;
+    const user = getUserFromLocal();
     const id = user?.id;
     if(id) {
       setCanProceed(true)
       try {
         await uploadProfileImage(id, file)
       } catch (error: unknown) {
+        console.log(error)
         setError(`Image Upload failed, Try again Later`)
       }
     } else {

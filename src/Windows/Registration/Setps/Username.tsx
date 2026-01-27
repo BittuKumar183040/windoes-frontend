@@ -1,4 +1,4 @@
-import { ArrowBigLeft, CheckCircle, XCircle } from "lucide-react";
+import { ArrowBigLeft } from "lucide-react";
 import type { RegistrationStepProps } from "../registrationSteps";
 import TextInput from "../../../components/ui/input/TextInput";
 import { useEffect, useMemo, useState } from "react";

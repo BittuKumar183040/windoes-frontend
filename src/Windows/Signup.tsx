@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import * as motion from "motion/react-client"
 import background from "../assets/desktop_backgroud.jpg"
-import { CircleUserRound, Grip, UserRoundPlus } from 'lucide-react';
+import { Grip, UserRoundPlus } from 'lucide-react';
 import SwitchUser from '../components/ui/Signup/SwitchUser';
 import UserSwitch from '../components/ui/Signup/SwitchBtn';
 import TextInput from '../components/ui/input/TextInput';
@@ -12,6 +12,7 @@ import { login } from '../api/auth.api';
 import { getUserProfileImage } from '../api/user.api';
 import { UserProfileImage } from '../components/ui/UserProfile';
 import SliderContent from '../components/ui/Signup/Slider';
+import { getUserFromLocal } from '../components/utility/helper/localstorage';
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -23,8 +24,8 @@ const Signup = () => {
   const [logo, setLogo] = useState<string | null>(null);
 
   const [user, setUser] = useState<User>(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) { return JSON.parse(storedUser) }
+    const storedUser = getUserFromLocal();
+    if (storedUser) { return storedUser }
     return { id: '', username: '', name: '', email: '' };
   });
 
@@ -33,7 +34,7 @@ const Signup = () => {
   }
 
   useEffect(() => {
-    if (!localStorage.getItem("user")) {
+    if (!getUserFromLocal()) {
       setSwitchUser(true);
     }
     if (user && user.id) {
@@ -108,7 +109,7 @@ const Signup = () => {
         >
           {switchUser === false ?
             <div className=' flex flex-col gap-6 justify-between items-center h-fit'>
-              <UserProfileImage src={logo} size={200} />
+              <UserProfileImage src={logo} size={200} loading={true} />
               <p className=' text-4xl font-bold tracking-wide'>{user.name}</p>
               {isIncorrectPasswordState ? <>
                 <p className=' text-white text-lg'>The PIN is incorrect. Try again.</p>

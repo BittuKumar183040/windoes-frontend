@@ -1,7 +1,3 @@
-import { useEffect, useState } from "react";
-import TextInput from "../../../components/ui/input/TextInput";
-
-
 const Addons = ({ onNext }: { onNext: () => void }) => {
 
   return (

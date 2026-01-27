@@ -43,7 +43,7 @@ interface ButtonBarProps {
   onClick?: MouseEventHandler<HTMLButtonElement> | undefined;
 }
 
-export const ButtonBar = ({ Logo, label, buttonLabel, type = "primary", onClick }: ButtonBarProps) => {
+export const ButtonBar = ({ Logo, label, buttonLabel, onClick }: ButtonBarProps) => {
   return (<div className=" flex justify-between p-4 rounded-lg border border-gray-300 items-center bg-white/30">
     <div className=" flex gap-5 items-center justify-between"><Logo strokeWidth={1.1} /><p>{label}</p></div>
     <button onClick={onClick}

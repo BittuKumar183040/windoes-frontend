@@ -5,7 +5,6 @@ import type { User } from "../../../types/User";
 import { useNavigate } from "react-router-dom";
 import { getUserByKeyword, getUserProfileImage } from "../../../api/user.api";
 import { login } from "../../../api/auth.api";
-import { CircleUserRound } from "lucide-react";
 import { UserProfileImage } from "../UserProfile";
 
 const SwitchUser = () => {
@@ -100,7 +99,7 @@ const SwitchUser = () => {
 
   return (
     <div className=' flex flex-col gap-6 justify-between items-center h-fit'>
-      <UserProfileImage size={200} src={logo} />
+      <UserProfileImage size={200} src={logo} loading={isLogoLoading}/>
       <p className=' text-4xl font-bold tracking-wide'>{user ? user?.name : "Switch User"}</p>
       {<p className={` text-red-300 ${errorMsg ? "block" : " invisible"}`}>Error: {errorMsg}</p>}
 
