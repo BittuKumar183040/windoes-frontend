@@ -1,21 +1,12 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import TextInput from "../../../components/ui/input/TextInput";
 
 
 const Pin = ({ onNext }: { onNext: () => void }) => {
-  const [canProceed, setCanProceed] = useState(false)
   const [pin, setPin] = useState("");
   const [pinConfirm, setPinConfirm] = useState("");
 
-  useEffect(() => {
-    if (!pin || !pinConfirm) return;
-
-    if (pin === pinConfirm) {
-      setCanProceed(true)
-    } else {
-      console.log("PINs do not match");
-    }
-  }, [pin, pinConfirm]);
+  const canProceed = !!pin && !!pinConfirm && pin === pinConfirm;
 
   return (
     <div className="relative flex flex-wrap h-full w-full">
@@ -36,6 +27,7 @@ const Pin = ({ onNext }: { onNext: () => void }) => {
               onChange={(val: string) => setPin(val)}
               placeholder="Enter Pin"
               autoFocus
+              enableEnter={false}
               style={{
                 width: "100%",
                 background: "rgba(255,255,255,0.5)",

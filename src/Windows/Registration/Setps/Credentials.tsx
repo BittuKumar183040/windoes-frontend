@@ -126,6 +126,7 @@ const Credentials = ({ onNext, onPrev }: RegistrationStepProps) => {
             onChange={(val: string) => handleChange("name", val)}
             placeholder="Enter Full Name"
             autoFocus
+            enableEnter={false}
             style={{
               width: "100%",
               background: "rgba(255,255,255,0.5)",
@@ -140,6 +141,7 @@ const Credentials = ({ onNext, onPrev }: RegistrationStepProps) => {
             type="email"
             onChange={(val: string) => handleChange("email", val)}
             placeholder="Enter Email"
+            enableEnter={false}
             style={{
               width: "100%",
               background: "rgba(255,255,255,0.5)",
@@ -154,6 +156,7 @@ const Credentials = ({ onNext, onPrev }: RegistrationStepProps) => {
             type="password"
             onChange={(val: string) => handleChange("password", val)}
             placeholder="Enter Password"
+            enableEnter={false}
             style={{
               width: "100%",
               background: "rgba(255,255,255,0.5)",
@@ -168,6 +171,7 @@ const Credentials = ({ onNext, onPrev }: RegistrationStepProps) => {
             type="password"
             onChange={(val: string) => setConfirmPassword(val)}
             placeholder="Confirm Password"
+            enableEnter={false}
             style={{
               width: "100%",
               background: "rgba(255,255,255,0.5)",

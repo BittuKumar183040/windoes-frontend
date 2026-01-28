@@ -112,7 +112,7 @@ const Signup = () => {
               <UserProfileImage src={logo} size={200} loading={isLogoLoading} />
               <p className=' text-4xl font-bold tracking-wide'>{user.name}</p>
               {isIncorrectPasswordState ? <>
-                <p className=' text-white text-lg'>The PIN is incorrect. Try again.</p>
+                <p className=' text-white text-lg'>The Password is incorrect. Try again.</p>
                 <ConfirmButton
                   onClick={() => setIsIncorrectPasswordState(false)}
                   label='OK'
@@ -125,10 +125,10 @@ const Signup = () => {
                     type="text"
                     value={password}
                     onEnterPress={() => loginUser()}
-                    onChange={(value: string) => setPassword(value)} placeholder='PIN'
+                    onChange={(value: string) => setPassword(value)} placeholder='Password'
                     autoFocus
                   />
-                  <p className=' text-white/50 text-lg'>I forgot my pin </p>
+                  <p className=' text-white/50 text-lg'>I forgot my Password </p>
                 </>
               }
             </div>
