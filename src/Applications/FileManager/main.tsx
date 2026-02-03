@@ -1,6 +1,6 @@
 import React from "react";
-import ExplorerModel from "./ExplorerModel";
 import Window from "../../components/ui/common/Window";
+import ExplorerItems from "./ExplorerItems";
 
 interface FileManagerProps {
   isActive: boolean;
@@ -28,7 +28,7 @@ const FileManager: React.FC<FileManagerProps> = ({
       titleHeight={38}
       Title={<></>}
     >
-      <ExplorerModel />
+      <ExplorerItems />
     </Window>
 
   );

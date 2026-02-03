@@ -7,14 +7,15 @@ import { DocsFile, Drive, Folder, TextFile, UnknownFile } from "../../components
 import { extensionFinder } from "../../components/utility/helper/extensionFinder";
 import Navigation from "./Navigation";
 import SideExplorer from "./SideExplorer";
+import { overview } from "../../api/filesystem.api";
 import { fileSystemSocket } from "../../components/utility/socket/filesystemSocket";
 
 const ExplorerModel = () => {
   const [hirarchy, setHirarchy] = useState<Node[]>([]);
   const [path, setPath] = useState<Path[]>([{ id: null, label: "This PC" }]);
   const getNodes = (item: Node) => {
-    if (item.type === "file") return;
-    setPath(prev => [...prev, { id: item.id, label: item.label }]);
+    if (item.type === "FILE") return;
+    setPath(prev => [...prev, { id: item.id, label: item.name }]);
     fileSystemSocket.send(item.id);
   };
 
@@ -49,7 +50,14 @@ const ExplorerModel = () => {
     };
   }, []);
 
+  const fetchOverview = () => {
+    const data = overview();
+    console.log(data)
+  }
 
+  useEffect(() => {
+    fetchOverview()
+  }, [])
 
   return (
     <>
@@ -67,45 +75,45 @@ const ExplorerModel = () => {
                     onDoubleClick={() => getNodes(item)}
                   >
                     <div className="min-h-15 min-w-15 flex items-center justify-center">
-                      {item.type === "drive" && <Drive size={60} />}
-                      {item.type === "folder" && <Folder size={60} />}
-                      {item.type === "file" &&
-                        (item.extension
+                      {item.type === "FOLDER" && <Drive size={60} />}
+                      {item.type === "FOLDER" && <Folder size={60} />}
+                      {item.type === "FILE" &&
+                        (item.name
                           ? (
                             {
                               txt: <TextFile className="opacity-70" size={60} />,
                               md: <DocsFile className="opacity-70" size={60} />,
-                            }[item.extension] || <UnknownFile size={60} />
+                            }[item.name] || <UnknownFile size={60} />
                           )
                           : <UnknownFile />)}
                     </div>
 
                     <div className="flex flex-col w-full h-18 justify-center items-start">
-                      {item.type === "drive" && (
+                      {item.type === "FOLDER" && item.parentId === null && (
                         <>
-                          <p className="text-lg">({item.label}:)</p>
+                          <p className="text-lg">({item.name}:)</p>
                           <ProgressBar
                             className="flex-1"
                             value={item.size}
                             minPercentage={0}
-                            maxValue={item.capacity ? item.capacity : 5e11}
+                            maxValue={item.size ? item.size : 5e11}
                           />
                           <p className="text-md text-gray-700">
-                            {formatBytes((item.capacity ? item.capacity : 5e11) - item.size)} free of{" "}
+                            {formatBytes((item.size ? item.size : 5e11) - item.size)} free of{" "}
                             {formatBytes(item.size)}
                           </p>
                         </>
                       )}
 
-                      {item.type === "folder" && (
-                        <p className="text-lg">{item.label}</p>
+                      {item.type === "FOLDER" && (
+                        <p className="text-lg">{item.name}</p>
                       )}
 
-                      {item.type === "file" && (
+                      {item.type === "FILE" && (
                         <div className="flex flex-col items-start leading w-full">
-                          <p className="text-lg">{item.label}</p>
+                          <p className="text-lg">{item.name}</p>
                           <p className="text-lg text-gray-700">
-                            {extensionFinder(item.extension ? item.extension : "")}
+                            {extensionFinder(item.name?.split(".").pop() ? item.name : "")}
                           </p>
                           <p className="text-md text-gray-700">
                             {formatBytes(item.size)}

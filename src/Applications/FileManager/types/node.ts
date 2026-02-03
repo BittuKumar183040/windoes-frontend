@@ -1,14 +1,14 @@
 export interface Node {
   "id": string,
-  "type": "drive" | "folder" | "file",
-  "label": string,
-  "extension"?: string,
-  "createdAt": number,
-  "deleteStatus": 0 | 1 | -1,
-  "readOnly": boolean,
+  "userId": string,
+  "parentId": string,
+  "name": string,
+  "type": "FILE" | "FOLDER",
   "size": number,
-  "capacity"?: number,
-  "parentId": string | null
+  "status": string,
+  "icon": string,
+  "createdAt": number,
+  "updatedAt": number,
 }
 
 export interface Path {

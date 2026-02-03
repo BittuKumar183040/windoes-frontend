@@ -11,4 +11,8 @@ export const API_ENDPOINTS = {
   AUTH: {
     LOGIN: '/auth/login',
   },
+  FILESYSTEM: {
+    OVERVIEW: () => '/filesystem',
+    BY_FOLDER: (folder_id:string | null) => `/filesystem/folder${folder_id ? "/"+folder_id : ""}`,
+  }
 } as const;

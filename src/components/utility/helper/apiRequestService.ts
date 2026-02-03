@@ -6,9 +6,10 @@ const backendAPI = axios.create({
 
 
 import type { InternalAxiosRequestConfig } from "axios";
+import { getUserFromLocal } from "./localstorage";
 
 const interceptor = async (config: InternalAxiosRequestConfig) => {
-  config.headers.userId = "userId";
+  config.headers.userId = getUserFromLocal()?.id;
   return config;
 };
 

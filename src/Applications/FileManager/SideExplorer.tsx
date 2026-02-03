@@ -1,4 +1,4 @@
-import { ChevronRight, FileIcon, GalleryThumbnails, HardDrive, HomeIcon } from 'lucide-react';
+import { ChevronRight, FileIcon, Folder, GalleryThumbnails, HardDrive, HomeIcon } from 'lucide-react';
 import React, { useState } from 'react'
 import { Rnd } from 'react-rnd';
 
@@ -37,25 +37,25 @@ const sideMenuPanel: SideMenuItem[] = [
     subMenu: [
       {
         icon: HardDrive,
-        label: "Apps",
-        location: "Apps",
+        label: "Local Disk (C:)",
+        location: "C:",
         subMenu: [
           {
-            icon: HardDrive,
-            label: "Games",
-            location: "Games",
+            icon: Folder,
+            label: "Program Files",
+            location: "Program Files",
           },
           {
-            icon: HardDrive,
-            label: "Tools",
-            location: "Tools",
+            icon: Folder,
+            label: "Windoes",
+            location: "Windoes",
           },
         ],
       },
       {
         icon: HardDrive,
-        label: "Attachments",
-        location: "Attachments",
+        label: "Local Disk (D:)",
+        location: "D:",
       },
     ],
   },
