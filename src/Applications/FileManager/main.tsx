@@ -4,6 +4,7 @@ import ExplorerItems from "./ExplorerItems";
 import Navigation from "./Navigation";
 import type { Path } from "./types/node";
 import Actions from "./Actions";
+import { FileManagerProvider } from "./FileManagerContext";
 
 interface FileManagerProps {
   isActive: boolean;
@@ -39,9 +40,11 @@ const FileManager: React.FC<FileManagerProps> = ({
       titleHeight={38}
       Title={<></>}
     >
-      <Navigation path={path} onNodeClick={onNodeClick} />
-      <Actions />
-      <ExplorerItems />
+      <FileManagerProvider>
+        <Navigation path={path} onNodeClick={onNodeClick} />
+        <Actions />
+        <ExplorerItems />
+      </FileManagerProvider>
     </Window>
 
   );

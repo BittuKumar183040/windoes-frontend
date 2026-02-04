@@ -1,10 +1,14 @@
 import { PlusCircle } from "lucide-react"
 import { createFolder } from "../../api/filesystem.api"
+import { useFileManagerContext } from "./FileManagerContextState";
 
 const Actions = () => {
+  const { setLocation } = useFileManagerContext();
+
   const handleNew = async () => {
-    const folder = localStorage.getItem("selectedFolder");
+    const folder = localStorage.getItem("currentFolder");
     const data = await createFolder(folder, "New Folder")
+    setLocation((prev) => [...(prev ?? []), data]);
     console.log(data)
   }
   return (

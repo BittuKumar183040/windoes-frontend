@@ -5,10 +5,12 @@ import { folder } from "../../api/filesystem.api";
 import ProgressBar from "../../components/ui/common/ProgressBar";
 import { formatBytes } from "../../components/utility/helper/unitConverter";
 // import { extensionFinder } from "../../components/utility/helper/extensionFinder";
-import { Drive, Folder } from "../../components/ui/Icons/app-icons";
+import { Drive } from "../../components/ui/Icons/app-icons";
+import { useFileManagerContext } from "./FileManagerContextState";
+import Folder from "../../components/ui/FileManager/Folder";
 
 const ExplorerItems = () => {
-  const [location, setLocation] = useState<Node[] | null>(null);
+  const { location, setLocation } = useFileManagerContext();
   const [selectedFolder, setSelectedFolder] = useState<Node | null>(null);
 
   const fetchFolder = async () => {
@@ -30,8 +32,13 @@ const ExplorerItems = () => {
   }
   const handleOpen = async () => {
     if (!selectedFolder) return;
-    localStorage.setItem("currentFolder", selectedFolder.id)
+    localStorage.setItem("currentFolder", selectedFolder.id);
     await fetchFolder();
+  }
+
+  const handleBlankSpace = () => {
+    console.log("clicked Blank space")
+    localStorage.removeItem("selectedFolder");
   }
 
   return (<>
@@ -42,7 +49,7 @@ const ExplorerItems = () => {
         setSelectedFolder(null)
       }} className="flex-1 flex overflow-hidden">
         <SideExplorer />
-        <div className="flex-1 flex flex-wrap items-start justify-start content-start gap-2 p-4 bg-white overflow-auto">
+        <div onClick={handleBlankSpace} className="flex-1 flex flex-wrap items-start justify-start content-start gap-2 p-4 bg-white overflow-auto">
           {location?.map((item) => {
             return (<>
               { // for drive
@@ -67,17 +74,13 @@ const ExplorerItems = () => {
                     </div>
                   </button>
                 ) :
-                  // for File and Folder
-                  <button
-                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleSelect(item) }}
-                    onDoubleClick={(e) => { e.preventDefault(); e.stopPropagation(); handleOpen() }}
-                    className={`flex cursor-pointer border border-black/0 shrink-0 px-2 py-1 h-20 w-82 rounded-sm hover:bg-blue-100 justify-center items-start
-                    ${selectedFolder?.id === item.id && "bg-blue-100 border-black/100 "}`}>
-                    <Folder className=" shrink-0 w-17 h-17 p-1" />
-                    <div className=" w-full ml-2 text-left">
-                      <p className="text-lg">{item.name}</p>
-                    </div>
-                  </button>
+                  // for File and Folder 
+                  <Folder
+                    item={item}
+                    selected={selectedFolder?.id === item.id}
+                    onClick={handleSelect}
+                    onDoubleClick={handleOpen}
+                  />
               }
             </>
             )
