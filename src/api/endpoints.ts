@@ -14,5 +14,6 @@ export const API_ENDPOINTS = {
   FILESYSTEM: {
     OVERVIEW: () => '/filesystem',
     BY_FOLDER: (folder_id:string | null) => `/filesystem/folder${folder_id ? "/"+folder_id : ""}`,
+    FOLDER: () => `/filesystem/folder`,
   }
 } as const;

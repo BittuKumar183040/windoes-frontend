@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import Navigation from "./Navigation";
 import SideExplorer from "./SideExplorer";
-import type { Node, Path } from "./types/node";
+import type { Node } from "./types/node";
 import { folder } from "../../api/filesystem.api";
 import ProgressBar from "../../components/ui/common/ProgressBar";
 import { formatBytes } from "../../components/utility/helper/unitConverter";
@@ -9,15 +8,8 @@ import { formatBytes } from "../../components/utility/helper/unitConverter";
 import { Drive, Folder } from "../../components/ui/Icons/app-icons";
 
 const ExplorerItems = () => {
-  const [path, setPath] = useState<Path[]>([{ id: null, label: "This PC" }]);
   const [location, setLocation] = useState<Node[] | null>(null);
   const [selectedFolder, setSelectedFolder] = useState<Node | null>(null);
-
-  const onNodeClick = (node: Path) => {
-    console.log(node)
-    setPath([{ id: null, label: "This PC" }])
-    return null;
-  }
 
   const fetchFolder = async () => {
     const data = await folder(selectedFolder ? selectedFolder?.id : null);
@@ -26,19 +18,23 @@ const ExplorerItems = () => {
 
   useEffect(() => {
     (async () => {
+      localStorage.removeItem("selectedFolder");
+      localStorage.removeItem("currentFolder");
       await fetchFolder();
     })();
   }, [])
 
   const handleSelect = (item: Node) => {
-    setSelectedFolder(item)
+    localStorage.setItem("selectedFolder", item.id)
+    setSelectedFolder(item);
   }
   const handleOpen = async () => {
+    if (!selectedFolder) return;
+    localStorage.setItem("currentFolder", selectedFolder.id)
     await fetchFolder();
   }
 
   return (<>
-    <Navigation path={path} onNodeClick={onNodeClick} />
     <div className="flex-1 flex flex-col text-black overflow-hidden">
       <div onClick={(e) => {
         e.preventDefault();
