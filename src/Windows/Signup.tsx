@@ -18,7 +18,7 @@ const Signup = () => {
   const navigate = useNavigate();
   const [isSliderLoaded, setIsSliderLoaded] = useState(true);
   const [isIncorrectPasswordState, setIsIncorrectPasswordState] = useState(false);
-  const [password, setPassword] = useState("SecurePass123!");
+  const [password, setPassword] = useState("");
   const [switchUser, setSwitchUser] = useState(false);
   const [isLogoLoading, setLogoLoading] = useState(false);
   const [logo, setLogo] = useState<string | null>(null);
