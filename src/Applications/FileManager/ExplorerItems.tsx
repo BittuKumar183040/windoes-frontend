@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import SideExplorer from "./SideExplorer";
 import type { Node } from "./types/node";
-import { folder } from "../../api/filesystem.api";
+import { deleteFolder, folder } from "../../api/filesystem.api";
 import ProgressBar from "../../components/ui/common/ProgressBar";
 import { formatBytes } from "../../components/utility/helper/unitConverter";
 // import { extensionFinder } from "../../components/utility/helper/extensionFinder";
@@ -37,9 +37,22 @@ const ExplorerItems = () => {
   }
 
   const handleBlankSpace = () => {
-    console.log("clicked Blank space")
     localStorage.removeItem("selectedFolder");
   }
+
+  useEffect(() => {
+    const handleKeyDown = async (e: KeyboardEvent) => {
+      if(!selectedFolder?.parentId) { return;}
+      if (e.key === "Delete") {
+        await deleteFolder(selectedFolder?.id);
+        setLocation((prev) => prev && prev.filter((item) => item.id !== selectedFolder?.id));
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [selectedFolder]);
 
   return (<>
     <div className="flex-1 flex flex-col text-black overflow-hidden">

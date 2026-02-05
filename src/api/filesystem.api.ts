@@ -10,6 +10,13 @@ export const folder = async (id: string | null) => {
   const { data } = await backendAPI.get(API_ENDPOINTS.FILESYSTEM.BY_FOLDER(id));
   return data;
 };
+
+export const deleteFolder = async (id: string) => {
+  console.log("Delete API")
+  const { data } = await backendAPI.delete(API_ENDPOINTS.FILESYSTEM.BY_ID(id));
+  return data;
+};
+
 export const createFolder = async (parentId: string | null, name: string) => {
   const { data } = await backendAPI.post(API_ENDPOINTS.FILESYSTEM.FOLDER(), {
     parentId,
