@@ -65,29 +65,31 @@ const SliderContent = () => {
     weekday: "long", month: "long", day: "numeric",
   });
 
-  return (<>
-    <div className=" flex justify-around py-20">
+  return (<div className=" flex flex-col justify-between h-full p-20">
+    <div className=" flex justify-around">
       <div className=" flex flex-col gap-4 tracking-wide w-80 text-xl items-center text-center">
         <p className=" p-4 bg-black/30 rounded-xl w-fit"><Search className=" rotate-90 " /></p>
         <p>We're looking at drift ice floating in the coastal waters of one of the world's largest islands.</p>
       </div>
       <div className=' flex flex-col text-center justify-center'>
-        <div className=" text-white text-xl flex flex-col items-center gap-4">
-          <EyeLoading />
-          <p>Looking for you...</p>
-        </div>
-        <div className="mt-8 text-white">
+        <div className="mt-28 text-white">
           <p className="text-[120px] font-bold leading-none">{time}</p>
           <p className="text-[40px]">{date}</p>
         </div>
-
       </div>
       <div className=" flex flex-col gap-4 tracking-wide w-80 text-xl items-center text-center">
         <p className=" p-4 bg-black/30 rounded-xl w-fit"><Camera /></p>
         <p>Like the image that you see?</p>
       </div>
     </div>
-  </>
+    <div className="flex items-center justify-center">
+      <div></div>
+      <div>
+        <p>Click anywhere to continue.</p>
+      </div>
+      <div></div>
+    </div>
+  </div>
   )
 }
 

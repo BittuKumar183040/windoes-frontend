@@ -42,7 +42,7 @@ const ExplorerItems = () => {
 
   useEffect(() => {
     const handleKeyDown = async (e: KeyboardEvent) => {
-      if(!selectedFolder?.parentId) { return;}
+      if (!selectedFolder?.parentId) { return; }
       if (e.key === "Delete") {
         await deleteFolder(selectedFolder?.id);
         setLocation((prev) => prev && prev.filter((item) => item.id !== selectedFolder?.id));
@@ -62,18 +62,39 @@ const ExplorerItems = () => {
         setSelectedFolder(null)
       }} className="flex-1 flex overflow-hidden">
         <SideExplorer />
-        <div onClick={handleBlankSpace} className="flex-1 flex flex-wrap items-start justify-start content-start gap-2 p-4 bg-white overflow-auto">
-          {location?.map((item) => {
-            return (<>
-              { // for drive
-                item.type === "FOLDER" && item.parentId === null ? (
+        <div
+          onClick={handleBlankSpace}
+          className="flex-1 flex flex-wrap items-start justify-start content-start gap-2 p-4 bg-white overflow-auto"
+        >
+          {location?.length === 0 ? (
+            <div className=" flex justify-center w-full">
+              <p className="text-gray-800 text-lg select-none">
+                This folder is empty.
+              </p>
+            </div>
+          ) : (
+            location?.map((item) => {
+              // Drive (root folders)
+              if (item.type === "FOLDER" && item.parentId === null) {
+                return (
                   <button
-                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleSelect(item) }}
-                    onDoubleClick={(e) => { e.preventDefault(); e.stopPropagation(); handleOpen() }}
+                    key={item.id}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleSelect(item);
+                    }}
+                    onDoubleClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleOpen();
+                    }}
+                    draggable
                     className={`flex cursor-pointer border border-black/0 shrink-0 px-2 py-1 h-20 w-82 rounded-sm hover:bg-blue-100 justify-center items-start
-                    ${selectedFolder?.id === item.id && "bg-blue-100 border-black/100 "}`}>
-                    <Drive className=" shrink-0 w-17 h-17 p-1" />
-                    <div className=" w-full ml-2 text-left">
+                      ${selectedFolder?.id === item.id && "bg-blue-100 border-black/100"}`}
+                  >
+                    <Drive className="shrink-0 w-17 h-17 p-1 pointer-events-none" />
+                    <div className="w-full ml-2 text-left">
                       <p className="text-lg">{item.name}</p>
                       <ProgressBar
                         className="flex-1"
@@ -86,18 +107,21 @@ const ExplorerItems = () => {
                       </p>
                     </div>
                   </button>
-                ) :
-                  // for File and Folder 
-                  <Folder
-                    item={item}
-                    selected={selectedFolder?.id === item.id}
-                    onClick={handleSelect}
-                    onDoubleClick={handleOpen}
-                  />
+                );
               }
-            </>
-            )
-          })}
+
+              // Files & folders
+              return (
+                <Folder
+                  key={item.id}
+                  item={item}
+                  selected={selectedFolder?.id === item.id}
+                  onClick={handleSelect}
+                  onDoubleClick={handleOpen}
+                />
+              );
+            })
+          )}
         </div>
       </div>
     </div>

@@ -3,19 +3,34 @@ import { ArrowLeft, ArrowRight, ArrowUp, ChevronRight, RefreshCwIcon } from "luc
 import { System } from "../../components/ui/Icons/app-icons";
 import ActionButton from "../../components/ui/FileManager/ActionButton";
 import type { Path } from "./types/node";
+import { useFileManagerContext } from "./FileManagerContextState";
+import { folder } from "../../api/filesystem.api";
 
-interface NavigationProps {
-  path: Path[];
-  onNodeClick: (node: Path) => void;
-}
-
-const Navigation = ({path, onNodeClick}: NavigationProps) => {
+const Navigation = () => {
+  const { location, setLocation } = useFileManagerContext();
   const [addressBarActive, setAddressBarActive] = useState<boolean>(false);
 
   const [searchValue, setSearchValue] = useState<string>("");
   const [addressBarValue, setaddressBarValue] = useState<string>("");
-
+  const [path] = useState<Path[]>([
+    { id: null, label: "This PC" }
+  ]);
   const addressBarRef = useRef<HTMLDivElement | null>(null);
+
+  const isRoot = () => {
+    return location?.some(item => item.parentId === null) ?? false;
+  }
+
+  const onNodeClick = async (node: Path) => {
+    console.log(node)
+    if (!isRoot()) {
+      const data = await folder(node.id);
+      console.log("This PC:", node)
+      setLocation(data)
+    } else {
+      console.log("Root : False")
+    }
+  }
 
   const handleSearchChange = (value: string) => {
     setSearchValue(value)

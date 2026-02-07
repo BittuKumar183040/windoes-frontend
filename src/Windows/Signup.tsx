@@ -128,7 +128,7 @@ const Signup = () => {
                     onChange={(value: string) => setPassword(value)} placeholder='Password'
                     autoFocus
                   />
-                  <p className=' text-white/50 text-lg'>I forgot my Password </p>
+                  <p className=' text-white/50 text-lg hidden'>I forgot my Password </p>
                 </>
               }
             </div>
