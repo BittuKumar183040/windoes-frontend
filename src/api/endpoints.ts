@@ -16,5 +16,6 @@ export const API_ENDPOINTS = {
     BY_FOLDER: (folder_id:string | null) => `/filesystem/folder${folder_id ? "/"+folder_id : ""}`,
     FOLDER: () => `/filesystem/folder`,
     BY_ID: (id:string) => `/filesystem/${id}`,
+    RENAME_BY_ID: (id:string) => `/filesystem/${id}/rename`,
   }
 } as const;
