@@ -43,6 +43,9 @@ const ExplorerItems = () => {
   useEffect(() => {
     const handleKeyDown = async (e: KeyboardEvent) => {
       if (!selectedFolder?.parentId) { return; }
+      
+      if ((e.target as HTMLElement)?.tagName === "INPUT") {return;}
+
       if (e.key === "Delete") {
         await deleteFolder(selectedFolder?.id);
         setLocation((prev) => prev && prev.filter((item) => item.id !== selectedFolder?.id));
