@@ -6,13 +6,14 @@ import { renameFolder } from '../../../api/filesystem.api';
 
 interface FolderProps {
   item: Node,
+  initActive?: boolean,
   selected: boolean,
   onClick: (item: Node) => void,
   onDoubleClick: (item: Node) => void
 }
 
-const Folder = ({ item, selected, onClick, onDoubleClick }: FolderProps) => {
-  const [renameActive, setRenameActive] = useState(false);
+const Folder = ({ item, initActive = false, selected, onClick, onDoubleClick }: FolderProps) => {
+  const [renameActive, setRenameActive] = useState(initActive);
   const [inputValue, setInputValue] = useState(item.name);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
