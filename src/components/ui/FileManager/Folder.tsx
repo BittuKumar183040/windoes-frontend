@@ -63,7 +63,6 @@ const Folder = ({ item, selected, onClick, onDoubleClick }: FolderProps) => {
 
   return (
     <button
-
       onClick={(e) => { e.preventDefault(); e.stopPropagation(); onClick(item) }}
       onDoubleClick={(e) => { e.preventDefault(); e.stopPropagation(); onDoubleClick(item) }}
       className={`flex cursor-pointer border border-black/0 shrink-0 px-2 py-1 h-20 w-82 rounded-sm hover:bg-blue-100 justify-center items-start
@@ -71,7 +70,7 @@ const Folder = ({ item, selected, onClick, onDoubleClick }: FolderProps) => {
       `}
     >
       <FolderIcon className=" shrink-0 w-17 h-17 p-1" />
-      <div className=" w-full ml-2 text-left">
+      <div className=" w-full ml-2 mt-2 text-left">
         {renameActive ? <input ref={inputRef} autoFocus type="text" value={inputValue} onChange={(e) => setInputValue(e.target.value)} className="text-lg" />
           : <p onClick={handleTextClick} className="text-lg">{inputValue}</p>
         }
