@@ -21,7 +21,7 @@ A web-based portfolio project that recreates the Windows 11 desktop experience i
 
 1. Clone the repository:
   ```bash
-  git clone https://github.com/yourusername/windoes.git
+  git clone https://github.com/BittuKumar183040/windoes-frontend.git
   ```
 2. Install dependencies:
   ```bash
