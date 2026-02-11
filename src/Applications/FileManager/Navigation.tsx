@@ -1,10 +1,10 @@
-import { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { ArrowLeft, ArrowRight, ArrowUp, ChevronRight, RefreshCwIcon } from "lucide-react";
 import { System } from "../../components/ui/Icons/app-icons";
-import ActionButton from "../../components/ui/FileManager/ActionButton";
 import type { Path } from "./types/node";
 import { useFileManagerContext } from "./FileManagerContextState";
 import { folder } from "../../api/filesystem.api";
+import NavigationButton from "../../components/ui/FileManager/Navigation";
 
 const Navigation = () => {
   const { location, setLocation } = useFileManagerContext();
@@ -58,10 +58,10 @@ const Navigation = () => {
   return (
     <div className="min-h-[48px] flex justify-between items-center bg-[#f1f5f7] border-b border-black/20">
       <div className="flex gap-4 px-4 items-center">
-        <ActionButton Icon={ArrowLeft} />
-        <ActionButton Icon={ArrowRight} />
-        <ActionButton Icon={ArrowUp} />
-        <ActionButton Icon={RefreshCwIcon} iconStyle="p-0.5" />
+        <NavigationButton Icon={ArrowLeft} />
+        <NavigationButton Icon={ArrowRight} />
+        <NavigationButton Icon={ArrowUp} />
+        <NavigationButton Icon={RefreshCwIcon} iconStyle="p-0.5" />
       </div>
       
       <div
@@ -69,15 +69,15 @@ const Navigation = () => {
         className="relative h-[32px] flex flex-1 items-center text-xl text-black bg-linear-to-b from-white to-transparent rounded-md transition-all"
       >
         <div className={` absolute left-0 z-10 flex items-center gap-3 ${addressBarActive ? "opacity-0" : "opacity-100"}`}>
-          <ActionButton Icon={System} className="ml-2 pointer-events-none transition-opacity duration-150" />
-          {path.map((item) => <>
+          <NavigationButton Icon={System} className="ml-2 pointer-events-none transition-opacity duration-150" />
+          {path.map((item) => <React.Fragment key={item.id} >
             <button
               onClick={() => onNodeClick(item)}
               className=" flex items-center justify-center text-md px-3 py-px pt-1 hover:bg-gray-200/80 rounded-sm">
               {item.label}
             </button>
             <ChevronRight size={16} strokeWidth={1} />
-          </>
+          </React.Fragment>
           )}
         </div>
 

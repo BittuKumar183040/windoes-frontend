@@ -10,8 +10,6 @@ export function extensionFinder(extension: string): string {
       return "Windows Installer Package"
     case "dll":
       return "Application extension"
-
-
     case "txt":
       return "Text Document"
     case "gitignore":

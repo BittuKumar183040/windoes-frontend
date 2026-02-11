@@ -1,6 +1,7 @@
 import { ChevronRight, FileIcon, Folder, GalleryThumbnails, HardDrive, HomeIcon } from 'lucide-react';
 import React, { useState } from 'react'
 import { Rnd } from 'react-rnd';
+import { SeperatorHorizontal } from '../../components/ui/FileManager/Seperator';
 
 type MenuIconType = React.ComponentType<{ size?: number }>;
 
@@ -96,9 +97,7 @@ const SideExplorer = ({className}:{className?: string}) => {
     return items.map((item, idx) => {
       if (item.label === "separator") {
         return (
-          <div key={`sep-${level}-${idx}`} className="w-11/12 m-auto my-4">
-            <div className="w-full h-px bg-gray-300" />
-          </div>
+          <SeperatorHorizontal key={`sep-${level}-${idx}`} />
         );
       }
 
