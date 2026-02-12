@@ -1,4 +1,17 @@
-export function extensionFinder(extension: string): string {
+export function getExtension(filename: string): string {
+  const extenstion = filename.split(".").pop()
+  return extenstion || "" ;
+}
+
+export function removeExtension(filename: string): string {
+  const lastDotIndex = filename.lastIndexOf(".");
+  if (lastDotIndex === -1) return filename;
+  const file = filename.substring(0, lastDotIndex);
+  console.log(file)
+  return file
+}
+
+export function extensionDetailFinder(extension: string): string {
   extension = extension.toLowerCase();
 
   switch(extension){
