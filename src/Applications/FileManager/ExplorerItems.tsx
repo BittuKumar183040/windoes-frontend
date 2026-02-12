@@ -33,7 +33,10 @@ const ExplorerItems = () => {
   const handleOpen = async () => {
     if (!selectedFolder) return;
     localStorage.setItem("currentFolder", selectedFolder.id);
-    await fetchFolder();
+    if(selectedFolder.type === "FILE") return;
+    if(selectedFolder.type === "FOLDER"){
+      await fetchFolder();
+    }
   }
 
   const handleBlankSpace = () => {

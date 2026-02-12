@@ -67,7 +67,6 @@ const FileFolder = ({item, initActive = false, selected, onClick, onDoubleClick 
   const handleFocus = () => {
     const input = inputRef.current;
     if (input) {
-      console.log(removeExtension(input?.value).length)
       input.setSelectionRange(0, removeExtension(input?.value).length);
     }
   };
