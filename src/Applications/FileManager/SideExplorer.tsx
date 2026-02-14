@@ -1,5 +1,5 @@
 import { ChevronRight, ComputerIcon, FileIcon, Folder, HardDrive } from "lucide-react";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Rnd } from "react-rnd";
 import { folder, overview } from "../../api/filesystem.api";
 import { useFileManagerContext } from "./FileManagerContextState";
