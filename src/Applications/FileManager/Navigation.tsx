@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useMemo } from "react";
 import { ArrowLeft, ArrowRight, ArrowUp, ChevronRight, RefreshCwIcon } from "lucide-react";
 import { System } from "../../components/ui/Icons/app-icons";
 import type { Path } from "./types/node";
@@ -17,13 +17,14 @@ const Navigation = () => {
   ]);
   const addressBarRef = useRef<HTMLDivElement | null>(null);
 
-  const isRoot = () => {
-    return location?.some(item => item.parentId === null) ?? false;
-  }
+  const isRoot = useMemo(
+    () => location?.some(item => item.parentId === null),
+    [location]
+  );
 
   const onNodeClick = async (node: Path) => {
     console.log(node)
-    if (!isRoot()) {
+    if (!isRoot) {
       const data = await folder(node.id);
       console.log("This PC:", node)
       setLocation(data)
@@ -55,13 +56,34 @@ const Navigation = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+
+  const handleBack = () => {
+    // here require list of visisted folders in serial way and have prev items
+    const current = localStorage.getItem("currentFolder");
+    console.log(current)
+  }
+
+  const handleForward = () => {
+    // here require list of visisted folders in serial way and if currentfolder matches with next item
+    const current = localStorage.getItem("currentFolder");
+    console.log(current)
+  }
+
+  const handleRefresh = async () => {
+    const current = localStorage.getItem("currentFolder");
+    if (current){
+      const data = await folder(current);
+      setLocation(data)
+    };
+  }
+
   return (
     <div className="min-h-[48px] flex justify-between items-center bg-[#f1f5f7] border-b border-black/20">
       <div className="flex gap-4 px-4 items-center">
-        <NavigationButton Icon={ArrowLeft} />
-        <NavigationButton Icon={ArrowRight} />
-        <NavigationButton Icon={ArrowUp} />
-        <NavigationButton Icon={RefreshCwIcon} iconStyle="p-0.5" />
+        <NavigationButton Icon={ArrowLeft} isRoot={isRoot} onClick={handleBack}/>
+        <NavigationButton Icon={ArrowRight} isRoot={isRoot} onClick={handleForward} />
+        <NavigationButton Icon={ArrowUp} isRoot={isRoot} onClick={handleBack} />
+        <NavigationButton Icon={RefreshCwIcon} iconStyle="p-0.5" isRoot={isRoot} onClick={handleRefresh} />
       </div>
       
       <div
