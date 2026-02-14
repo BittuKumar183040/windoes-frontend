@@ -1,72 +1,50 @@
-import { ChevronRight, FileIcon, Folder, GalleryThumbnails, HardDrive, HomeIcon } from 'lucide-react';
-import React, { useState } from 'react'
-import { Rnd } from 'react-rnd';
-
-type MenuIconType = React.ComponentType<{ size?: number }>;
+import { ChevronRight, ComputerIcon, FileIcon, Folder, HardDrive } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Rnd } from "react-rnd";
+import { folder, overview } from "../../api/filesystem.api";
+import { useFileManagerContext } from "./FileManagerContextState";
 
 interface SideMenuItem {
-  icon?: MenuIconType;
-  label: string;
-  location?: string;
-  subMenu?: SideMenuItem[];
+  id: string;
+  userId: string;
+  parentId: string | null;
+  name: string;
+  type: "FILE" | "FOLDER" | string;
+  size: string | number | null;
+  icon: string;
+  createdAt: number;
+  updatedAt: number;
+  children: SideMenuItem[];
 }
 
-const sideMenuPanel: SideMenuItem[] = [
-  {
-    icon: HomeIcon,
-    label: "Home",
-    location: "Home",
-  },
-  {
-    icon: GalleryThumbnails,
-    label: "Gallery",
-    location: "Gallery",
-  },
-  {
-    icon: HardDrive,
-    label: "Bittu - Shared",
-    location: "Drive",
-  },
-  {
-    label: "separator",
-  },
-  {
-    icon: FileIcon,
-    label: "This PC",
-    location: "This PC",
-    subMenu: [
-      {
-        icon: HardDrive,
-        label: "Local Disk (C:)",
-        location: "C:",
-        subMenu: [
-          {
-            icon: Folder,
-            label: "Program Files",
-            location: "Program Files",
-          },
-          {
-            icon: Folder,
-            label: "Windoes",
-            location: "Windoes",
-          },
-        ],
-      },
-      {
-        icon: HardDrive,
-        label: "Local Disk (D:)",
-        location: "D:",
-      },
-    ],
-  },
-];
+const THIS_PC_ID = "this_pc";
 
-const SideExplorer = ({className}:{className?: string}) => {
+const toSideMenuItems = (data: unknown): SideMenuItem[] => {
+  if (Array.isArray(data)) {
+    return data as SideMenuItem[];
+  }
 
+  if (data && typeof data === "object") {
+    const payload = data as { data?: unknown; items?: unknown };
+    if (Array.isArray(payload.data)) {
+      return payload.data as SideMenuItem[];
+    }
+    if (Array.isArray(payload.items)) {
+      return payload.items as SideMenuItem[];
+    }
+  }
+
+  return [];
+};
+
+const SideExplorer = ({ className }: { className?: string }) => {
+  const { setLocation } = useFileManagerContext();
   const [sidebarWidth, setSidebarWidth] = useState(220);
-
-  const [openIds, setOpenIds] = useState<Set<string>>(() => new Set());
-  const [selectedLevel, setSelectedLevel] = useState("Home")
+  const [sideMenuPanelItems, setMenuPanelItem] = useState<SideMenuItem[]>([]);
+  const [openIds, setOpenIds] = useState<Set<string>>(
+    () => new Set([THIS_PC_ID])
+  );
+  const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const toggleOpen = (id: string) => {
     setOpenIds((prev) => {
@@ -80,62 +58,117 @@ const SideExplorer = ({className}:{className?: string}) => {
     });
   };
 
-  const handleItemClick = (item: SideMenuItem) => {
-    const hasSubMenu = item.subMenu && item.subMenu.length > 0;
-    const id = item.location ?? item.label;
-    setSelectedLevel(item.label)
+  const handleItemClick = async (item: SideMenuItem) => {
+    const hasChildren = item.children.length > 0;
+    setSelectedId(item.id);
 
-    if (hasSubMenu) {
-      toggleOpen(id);
-    } else {
-      console.log("navigate to:", item.location);
+    if (hasChildren && !openIds.has(item.id)) {
+      setOpenIds((prev) => new Set(prev).add(item.id));
+    }
+
+    if (item.id === THIS_PC_ID) {
+      localStorage.removeItem("selectedFolder");
+      localStorage.removeItem("currentFolder");
+      const data = await folder(null);
+      setLocation(data);
+      return;
+    }
+
+    localStorage.setItem("selectedFolder", item.id);
+
+    if (item.type === "FOLDER") {
+      const data = await folder(item.id);
+      setLocation(data);
+      localStorage.setItem("currentFolder", item.id);
     }
   };
 
-  const renderMenuItems = (items: SideMenuItem[], level: number = 0) => {
-    return items.map((item, idx) => {
-      if (item.label === "separator") {
-        return (
-          <div key={`sep-${level}-${idx}`} className="w-11/12 m-auto my-4">
-            <div className="w-full h-px bg-gray-300" />
-          </div>
-        );
-      }
+  const renderItemIcon = (item: SideMenuItem) => {
+    if (item.id === THIS_PC_ID) {
+      return <ComputerIcon size={17} />;
+    }
+    if (item.icon === "drive-harddisk") {
+      return <HardDrive size={17} />;
+    }
+    if (item.type === "FOLDER") {
+      return <Folder size={17} />;
+    }
+    return <FileIcon size={17} />;
+  };
 
-      const Icon = item.icon;
-      const hasSubMenu = !!(item.subMenu && item.subMenu.length);
-      const id = item.location ?? item.label;
-      const isOpen = hasSubMenu && openIds.has(id);
+  
+  useEffect(() => {
+    const getFolderOverview = async () => {
+      const data = await overview();
+      setMenuPanelItem(toSideMenuItems(data));
+    };
+
+    void getFolderOverview();
+  }, []);
+
+  const menuItemsWithRoot: SideMenuItem[] = [
+    {
+      id: THIS_PC_ID,
+      userId: "global",
+      parentId: null,
+      name: "This PC",
+      type: "FOLDER",
+      size: null,
+      icon: "computer",
+      createdAt: 0,
+      updatedAt: 0,
+      children: sideMenuPanelItems.filter((item) => item.parentId === null),
+    },
+  ];
+
+  const renderMenuItems = (items: SideMenuItem[], level = 0) => {
+    return items.map((item, idx) => {
+      const hasChildren = item.children.length > 0;
+      const isOpen = hasChildren && openIds.has(item.id);
 
       return (
-        <div className={className} key={`${id}-${level}-${idx}`}>
+        <div className={className} key={`${item.id}-${level}-${idx}`}>
           <button
             type="button"
-            onClick={() => handleItemClick(item)}
-            className={` w-full text-left flex min-w-56 items-center gap-2 py-2 hover:bg-sky-100 transition-all active:outline active:outline-black
-              ${selectedLevel === item.label ? "outline outline-gray-500 bg-gray-200" : "outline-none border-white"}
-            `}
+            onClick={() => {
+              void handleItemClick(item);
+            }}
+            className={`w-full text-left flex min-w-56 items-center gap-2 py-2 hover:bg-sky-100 transition-all active:outline active:outline-black
+              ${selectedId === item.id ? "outline outline-gray-500 bg-gray-200" : "outline-none border-white"}`}
             style={{ paddingLeft: 16 + level * 12 }}
           >
-            {hasSubMenu ? (
-              <ChevronRight
-                strokeWidth={3}
-                className={` size-5 opacity-50 hover:opacity-80 transition-transform ${isOpen ? "rotate-90" : ""
-                  }`}
-              />
+            {hasChildren ? (
+              <span
+                role="button"
+                tabIndex={0}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  toggleOpen(item.id);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleOpen(item.id);
+                  }
+                }}
+                className="flex min-w-[15px] items-center justify-center"
+              >
+                <ChevronRight
+                  strokeWidth={3}
+                  className={`size-5 opacity-50 hover:opacity-80 transition-transform ${isOpen ? "rotate-90" : ""}`}
+                />
+              </span>
             ) : (
               <span className="min-w-[15px]" />
             )}
 
-            {Icon && <div className="link"><Icon size={17} /></div>}
-            <span className=" link text-lg whitespace-nowrap">{item.label}</span>
+            <div>{renderItemIcon(item)}</div>
+            <span className="text-lg whitespace-nowrap">{item.name}</span>
           </button>
 
-          {hasSubMenu && isOpen && (
-            <div>
-              {renderMenuItems(item.subMenu!, level + 1)}
-            </div>
-          )}
+          {hasChildren && isOpen && <div>{renderMenuItems(item.children, level + 1)}</div>}
         </div>
       );
     });
@@ -159,20 +192,25 @@ const SideExplorer = ({className}:{className?: string}) => {
         topLeft: false,
         bottomLeft: false,
       }}
-      disableDragging={true}
+      disableDragging
       bounds="parent"
       resizeHandleStyles={{ right: { width: "2px", right: "0px" } }}
       resizeHandleComponent={{
-        right: (<div className="flex items-center justify-center w-2 h-full" style={{ cursor: "url('/cursors/horizontal-resize_white.cur'), e-resize" }} />),
+        right: (
+          <div
+            className="flex items-center justify-center w-2 h-full"
+            style={{ cursor: "url('/cursors/horizontal-resize_white.cur'), e-resize" }}
+          />
+        ),
       }}
       className="shrink-0 border-r border-gray-200 bg-white"
       style={{ position: "relative" }}
     >
-      <div className="h-full w-full overflow-y-auto overflow-x-hidden px-1 pt-2 ">
-        {renderMenuItems(sideMenuPanel)}
+      <div className="h-full w-full overflow-y-auto overflow-x-hidden px-1 pt-2">
+        {renderMenuItems(menuItemsWithRoot)}
       </div>
     </Rnd>
-  )
-}
+  );
+};
 
-export default SideExplorer
+export default SideExplorer;

@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import type { Node } from '../../../Applications/FileManager/types/node';
-import { Folder as FolderIcon } from '../Icons/app-icons';
 import { useEffect, useRef } from 'react';
 import { renameFolder } from '../../../api/filesystem.api';
+import { IconManger } from '../Icons/IconManger';
+import { getExtension, removeExtension } from '../../utility/helper/extensionFinder';
 
 interface FolderProps {
   item: Node,
@@ -12,9 +13,10 @@ interface FolderProps {
   onDoubleClick: (item: Node) => void
 }
 
-const Folder = ({ item, initActive = false, selected, onClick, onDoubleClick }: FolderProps) => {
+const FileFolder = ({item, initActive = false, selected, onClick, onDoubleClick }: FolderProps) => {
   const [renameActive, setRenameActive] = useState(initActive);
   const [inputValue, setInputValue] = useState(item.name);
+  const extension = getExtension(item.name)
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const handleTextClick = () => {
@@ -30,7 +32,13 @@ const Folder = ({ item, initActive = false, selected, onClick, onDoubleClick }: 
     setRenameActive(false);
     const value = inputRef.current?.value;
     if(value && item.name !== value) {
-      await renameFolder(item.id, value)
+      try {
+        await renameFolder(item.id, value)
+      } catch (e) {
+        console.log(e)
+        setInputValue(item.name)
+      }
+
     }
   }
 
@@ -38,12 +46,11 @@ const Folder = ({ item, initActive = false, selected, onClick, onDoubleClick }: 
     if (!renameActive) return;
 
     const currentInput = inputRef.current;
-
+    currentInput?.focus();
     const handleClickOutside = (event: MouseEvent) => {
       if ( currentInput && event.target instanceof Node && 
         !currentInput.contains(event.target)
       ) {
-        setRenameActive(false);
         renameAPI();
       }
     };
@@ -62,6 +69,13 @@ const Folder = ({ item, initActive = false, selected, onClick, onDoubleClick }: 
     };
   }, [renameActive]);
 
+  const handleFocus = () => {
+    const input = inputRef.current;
+    if (input) {
+      input.setSelectionRange(0, removeExtension(input?.value).length);
+    }
+  };
+
   return (
     <button
       onClick={(e) => { e.preventDefault(); e.stopPropagation(); onClick(item) }}
@@ -70,14 +84,21 @@ const Folder = ({ item, initActive = false, selected, onClick, onDoubleClick }: 
         ${selected && "bg-blue-100 border-black/100 "}
       `}
     >
-      <FolderIcon className=" shrink-0 w-17 h-17 p-1" />
-      <div className=" w-full ml-2 mt-2 text-left">
-        {renameActive ? <input ref={inputRef} autoFocus type="text" value={inputValue} onChange={(e) => setInputValue(e.target.value)} className="text-lg" />
-          : <p onClick={handleTextClick} className="text-lg">{inputValue}</p>
-        }
+      { item.type === "FOLDER" && <IconManger extension='' /> }
+      { item.type === "FILE" && <IconManger extension={extension} /> }
+      <div className=" w-full ml-1 mt-2 text-left">
+        <input 
+          ref={inputRef}
+          type="text"
+          value={inputValue}
+          onFocus={handleFocus}
+          onChange={(e) => setInputValue(e.target.value)}
+          className={` ${renameActive ? "block" : "hidden"} text-lg pl-1`}
+        />
+        <p onClick={handleTextClick} className={` ${renameActive ? "hidden" : "block"} text-lg pl-1`}>{inputValue}</p>
       </div>
     </button>
   )
 }
 
-export default Folder
+export default FileFolder;

@@ -6,7 +6,7 @@ interface ButtonProps {
   iconStyle?: string;
 }
 
-const ActionButton = ({ Icon, iconStyle, className }: ButtonProps) => {
+const NavigationButton = ({ Icon, iconStyle, className }: ButtonProps) => {
   return (
     <button className={`h-[32px] w-[32px] flex bg-transparent items-center justify-center text-black rounded-md hover:bg-[#eee] transition-colors ${className}`}>
       <Icon className={` ${iconStyle}`} size={18} strokeWidth={1} />
@@ -14,4 +14,4 @@ const ActionButton = ({ Icon, iconStyle, className }: ButtonProps) => {
   );
 };
 
-export default ActionButton;
+export default NavigationButton;

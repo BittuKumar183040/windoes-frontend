@@ -1,13 +1,21 @@
-import { PlusCircle } from "lucide-react"
-import { createFolder } from "../../api/filesystem.api"
+import { File, PlusCircle } from "lucide-react"
+import { createFile, createFolder } from "../../api/filesystem.api"
 import { useFileManagerContext } from "./FileManagerContextState";
+import { ActionButtons } from "../../components/ui/FileManager/ActionButtons";
+import { SeperatorVertical } from "../../components/ui/FileManager/Seperator";
 
 const Actions = () => {
   const { location, setLocation } = useFileManagerContext();
 
-  const handleNew = async () => {
+  const handleNewFolder = async () => {
     const folder = localStorage.getItem("currentFolder");
     const data = await createFolder(folder, "New Folder")
+    setLocation((prev) => [...(prev ?? []), data]);
+  }
+  
+  const handleNewFile = async (filename: string) => {
+    const folder = localStorage.getItem("currentFolder");
+    const data = await createFile(folder, filename, 0)
     setLocation((prev) => [...(prev ?? []), data]);
   }
 
@@ -15,13 +23,9 @@ const Actions = () => {
 
   return (
     <div className=" bg-white text-black flex items-center gap-2 h-[48px] shrink-0 border-b px-4 border-gray-300">
-      <button disabled={isRoot} onClick={handleNew} className={`flex text-lg items-center justify-between rounded-md gap-2 hover:bg-gray-100 p-3 px-6
-        ${isRoot && " pointer-events-none opacity-50"}
-      `}>
-        <PlusCircle size={15} /> 
-        <p>New Folder</p>
-      </button>
-      <div className="w-px h-8/12 bg-gray-200" />
+      <ActionButtons label="New Folder" onClick={handleNewFolder} isDisabled={isRoot} Icon={PlusCircle} iconProps={{size:15}} />
+      <SeperatorVertical />
+      <ActionButtons label="New Document" onClick={() => handleNewFile("New Document.txt")} isDisabled={isRoot} Icon={File} iconProps={{size:15}} />
     </div>
   )
 }

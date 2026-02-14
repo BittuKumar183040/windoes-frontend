@@ -32,3 +32,13 @@ export const createFolder = async (parentId: string | null, name: string) => {
 
   return data;
 };
+
+export const createFile = async (parentId: string | null, name: string, size?: number) => {
+  const { data } = await backendAPI.post(API_ENDPOINTS.FILESYSTEM.FILE(), {
+    parentId,
+    name,
+    size: size || 0,
+  });
+
+  return data;
+};

@@ -7,7 +7,7 @@ import { formatBytes } from "../../components/utility/helper/unitConverter";
 // import { extensionFinder } from "../../components/utility/helper/extensionFinder";
 import { Drive } from "../../components/ui/Icons/app-icons";
 import { useFileManagerContext } from "./FileManagerContextState";
-import Folder from "../../components/ui/FileManager/Folder";
+import FileFolder from "../../components/ui/FileManager/FileFolder";
 
 const ExplorerItems = () => {
   const { location, setLocation } = useFileManagerContext();
@@ -33,7 +33,10 @@ const ExplorerItems = () => {
   const handleOpen = async () => {
     if (!selectedFolder) return;
     localStorage.setItem("currentFolder", selectedFolder.id);
-    await fetchFolder();
+    if(selectedFolder.type === "FILE") return;
+    if(selectedFolder.type === "FOLDER"){
+      await fetchFolder();
+    }
   }
 
   const handleBlankSpace = () => {
@@ -43,8 +46,8 @@ const ExplorerItems = () => {
   useEffect(() => {
     const handleKeyDown = async (e: KeyboardEvent) => {
       if (!selectedFolder?.parentId) { return; }
-      
-      if ((e.target as HTMLElement)?.tagName === "INPUT") {return;}
+
+      if ((e.target as HTMLElement)?.tagName === "INPUT") { return; }
 
       if (e.key === "Delete") {
         await deleteFolder(selectedFolder?.id);
@@ -111,18 +114,17 @@ const ExplorerItems = () => {
                     </div>
                   </button>
                 );
+              } else {
+                return (
+                  <FileFolder
+                    key={item.id}
+                    item={item}
+                    selected={selectedFolder?.id === item.id}
+                    onClick={handleSelect}
+                    onDoubleClick={handleOpen}
+                  />
+                );
               }
-
-              // Files & folders
-              return (
-                <Folder
-                  key={item.id}
-                  item={item}
-                  selected={selectedFolder?.id === item.id}
-                  onClick={handleSelect}
-                  onDoubleClick={handleOpen}
-                />
-              );
             })
           )}
         </div>

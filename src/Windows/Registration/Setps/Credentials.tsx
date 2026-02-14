@@ -112,87 +112,92 @@ const Credentials = ({ onNext, onPrev }: RegistrationStepProps) => {
         <img src="/signup/username.png" alt="Username Illustration" />
       </div>
 
-      <div className="w-1/2 flex flex-col h-full gap-6 justify-center">
-        <p className="text-2xl font-bold text-black">
-          Let's create your Windows account
-        </p>
+      <div className="w-1/2 flex flex-col h-full gap-6 min-h-0">
+        <div className="flex flex-col gap-2">
+          <p className="text-2xl font-bold text-black">
+            Let's create your Windows account
+          </p>
 
-        <p className="text-md text-black/50">
-          Make it yours with a unique name that's easy to recognize when connecting to it.
-        </p>
-        <div className="overflow-auto overflow-x-auto flex-1 flex justify-end gap-4 flex-col">
-          <TextInput
-            value={user.name}
-            onChange={(val: string) => handleChange("name", val)}
-            placeholder="Enter Full Name"
-            autoFocus
-            enableEnter={false}
-            style={{
-              width: "100%",
-              background: "rgba(255,255,255,0.5)",
-              color: "black",
-              boxShadow: "0px 1px 0 rgb(23, 96, 253)",
-            }}
-            loaderStyle="text-black"
-          />
+          <p className="text-md text-black/50">
+            Make it yours with a unique name that's easy to recognize when connecting to it.
+          </p>
+        </div>
 
-          <TextInput
-            value={user.email}
-            type="email"
-            onChange={(val: string) => handleChange("email", val)}
-            placeholder="Enter Email"
-            enableEnter={false}
-            style={{
-              width: "100%",
-              background: "rgba(255,255,255,0.5)",
-              color: "black",
-              boxShadow: "0px 1px 0 rgb(23, 96, 253)",
-            }}
-            loaderStyle="text-black"
-          />
+        <div className="flex-1 min-h-0 overflow-auto">
+          <div className="flex flex-col gap-4">
+            <TextInput
+              value={user.name}
+              onChange={(val: string) => handleChange("name", val)}
+              placeholder="Enter Full Name"
+              autoFocus
+              enableEnter={false}
+              style={{
+                width: "100%",
+                background: "rgba(255,255,255,0.5)",
+                color: "black",
+                boxShadow: "0px 1px 0 rgb(23, 96, 253)",
+              }}
+              loaderStyle="text-black"
+            />
 
-          <TextInput
-            value={user.password}
-            type="password"
-            onChange={(val: string) => handleChange("password", val)}
-            placeholder="Enter Password"
-            enableEnter={false}
-            style={{
-              width: "100%",
-              background: "rgba(255,255,255,0.5)",
-              color: "black",
-              boxShadow: "0px 1px 0 rgb(23, 96, 253)",
-            }}
-            loaderStyle="text-black"
-          />
+            <TextInput
+              value={user.email}
+              type="email"
+              onChange={(val: string) => handleChange("email", val)}
+              placeholder="Enter Email"
+              enableEnter={false}
+              style={{
+                width: "100%",
+                background: "rgba(255,255,255,0.5)",
+                color: "black",
+                boxShadow: "0px 1px 0 rgb(23, 96, 253)",
+              }}
+              loaderStyle="text-black"
+            />
 
-          <TextInput
-            value={confirmPassword}
-            type="password"
-            onChange={(val: string) => setConfirmPassword(val)}
-            placeholder="Confirm Password"
-            enableEnter={false}
-            style={{
-              width: "100%",
-              background: "rgba(255,255,255,0.5)",
-              color: "black",
-              boxShadow: "0px 1px 0 rgb(23, 96, 253)",
-            }}
-            loaderStyle="text-black"
-          />
+            <TextInput
+              value={user.password}
+              type="password"
+              onChange={(val: string) => handleChange("password", val)}
+              placeholder="Enter Password"
+              enableEnter={false}
+              style={{
+                width: "100%",
+                background: "rgba(255,255,255,0.5)",
+                color: "black",
+                boxShadow: "0px 1px 0 rgb(23, 96, 253)",
+              }}
+              loaderStyle="text-black"
+            />
 
-          <div className="flex flex-col gap-2 text-md">
-            {conditionStatus.map(c => (
-              <p
-                key={c.condition}
-                className={c.valid ? "text-green-700" : "text-red-700/50"}
-              >
-                {c.condition}
+            <TextInput
+              value={confirmPassword}
+              type="password"
+              onChange={(val: string) => setConfirmPassword(val)}
+              placeholder="Confirm Password"
+              enableEnter={false}
+              style={{
+                width: "100%",
+                background: "rgba(255,255,255,0.5)",
+                color: "black",
+                boxShadow: "0px 1px 0 rgb(23, 96, 253)",
+              }}
+              loaderStyle="text-black"
+            />
+
+            <div className="flex flex-col gap-2 text-md">
+              {conditionStatus.map(c => (
+                <p
+                  key={c.condition}
+                  className={c.valid ? "text-green-700" : "text-red-700/50"}
+                >
+                  {c.condition}
+                </p>
+              ))}
+              <p className={`text-red-700/50 ${!isConfirmPasswordValid && confirmPassword ? "" : "invisible"}`}>
+                Passwords do not match
               </p>
-            ))}
-            <p className={`text-red-700/50 ${!isConfirmPasswordValid && confirmPassword ? "" : "invisible"}`}>
-              Passwords do not match
-            </p>
+            </div>
           </div>
         </div>
 
