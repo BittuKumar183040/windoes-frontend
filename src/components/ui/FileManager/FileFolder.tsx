@@ -32,7 +32,13 @@ const FileFolder = ({item, initActive = false, selected, onClick, onDoubleClick 
     setRenameActive(false);
     const value = inputRef.current?.value;
     if(value && item.name !== value) {
-      await renameFolder(item.id, value)
+      try {
+        await renameFolder(item.id, value)
+      } catch (e) {
+        console.log(e)
+        setInputValue(item.name)
+      }
+
     }
   }
 
@@ -45,7 +51,6 @@ const FileFolder = ({item, initActive = false, selected, onClick, onDoubleClick 
       if ( currentInput && event.target instanceof Node && 
         !currentInput.contains(event.target)
       ) {
-        setRenameActive(false);
         renameAPI();
       }
     };
