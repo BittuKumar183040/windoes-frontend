@@ -3,6 +3,7 @@ import type { Node } from "./types/node";
 
 export interface FileManagerContextValue {
   location: Node[] | null;
+  overview: unknown;
   setLocation: React.Dispatch<React.SetStateAction<Node[] | null>>;
 }
 
