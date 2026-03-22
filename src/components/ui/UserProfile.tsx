@@ -29,7 +29,7 @@ export const UserProfileImage = ({ src, size = 48, loading }: UserProfileImagePr
   return (
     <ImageContainer size={size}>
       {src ? <img src={src} alt="Profile" className="h-full w-full object-cover" />
-        : <CircleUserRound className='h-full w-full scale-140 text-gray-300' strokeWidth={0.5} />
+        : <CircleUserRound className='h-full w-full scale-140 text-gray-100' strokeWidth={0.5} />
       }
     </ImageContainer>
   )
