@@ -28,11 +28,12 @@ interface NotepadProps {
   onActive: () => void;
   onMinimize: () => void;
   windowTitle: string;
+  data?: string;
 }
 
 const STORAGE_KEY_PREFIX = "notepad-state";
 
-const Notepad: React.FC<NotepadProps> = ({ isActive, onClose, onActive, onMinimize, windowTitle }) => {
+const Notepad: React.FC<NotepadProps> = ({ isActive, onClose, onActive, onMinimize, windowTitle, data }) => {
   const storageKey = `${STORAGE_KEY_PREFIX}:${windowTitle}`;
   const editorRef = useRef<HTMLDivElement | null>(null);
 
@@ -58,25 +59,35 @@ const Notepad: React.FC<NotepadProps> = ({ isActive, onClose, onActive, onMinimi
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    try {
-      const savedHtml = localStorage.getItem(storageKey);
-      const savedText = localStorage.getItem(storageKey + "Text");
-      if (!savedHtml || !savedText) return;
-
-      const parsed = JSON.parse(savedHtml) as { textHtml?: string };
+    if(data) {
+      const parsed = JSON.parse(data) as { textHtml?: string };
       const initialText = typeof parsed.textHtml === "string" ? parsed.textHtml : "";
 
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setHtmlText(initialText);
-      setTextNormal(savedText);
-      if (editorRef.current) {
-        editorRef.current.innerHTML = initialText;
-        editorRef.current.focus()
-        placeCaretAtEnd(editorRef.current);
+      setTextNormal(data);
+
+    } else {
+      try {
+        const savedHtml = localStorage.getItem(storageKey);
+        const savedText = localStorage.getItem(storageKey + "Text");
+        if (!savedHtml || !savedText) return;
+  
+        const parsed = JSON.parse(savedHtml) as { textHtml?: string };
+        const initialText = typeof parsed.textHtml === "string" ? parsed.textHtml : "";
+  
+        setHtmlText(initialText);
+        setTextNormal(savedText);
+        if (editorRef.current) {
+          editorRef.current.innerHTML = initialText;
+          editorRef.current.focus()
+          placeCaretAtEnd(editorRef.current);
+        }
+      } catch (err) {
+        console.warn("Invalid notepad state in localStorage", err);
       }
-    } catch (err) {
-      console.warn("Invalid notepad state in localStorage", err);
     }
+
   }, [storageKey]);
 
   useEffect(() => {

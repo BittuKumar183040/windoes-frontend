@@ -33,7 +33,9 @@ const ExplorerItems = () => {
   const handleOpen = async () => {
     if (!selectedFolder) return;
     localStorage.setItem("currentFolder", selectedFolder.id);
-    if(selectedFolder.type === "FILE") return;
+    if(selectedFolder.type === "FILE") {
+      console.log("File : ", localStorage.getItem("selectedFolder"))
+    }
     if(selectedFolder.type === "FOLDER"){
       await fetchFolder();
     }
@@ -97,7 +99,7 @@ const ExplorerItems = () => {
                     }}
                     draggable
                     className={`flex cursor-pointer border border-black/0 shrink-0 px-2 py-1 h-20 w-82 rounded-sm hover:bg-blue-100 justify-center items-start
-                      ${selectedFolder?.id === item.id && "bg-blue-100 border-black/100"}`}
+                      ${selectedFolder?.id === item.id && "bg-blue-100 border-black"}`}
                   >
                     <Drive className="shrink-0 w-17 h-17 p-1 pointer-events-none" />
                     <div className="w-full ml-2 text-left">
