@@ -7,6 +7,7 @@ export interface AppConfig {
   type: AppType;
   name: string;
   icon: string;
+  isPinned: boolean,
   data?: string;
   isActive: boolean;
   isClosed: boolean;
@@ -21,6 +22,7 @@ const initialState: AppConfig[] = [
     type: "fileManager",
     name: "File Manager",
     icon: "./icons/explorer.png",
+    isPinned: true,
     isActive: false,
     isClosed: true,
     isMinimized: false,
@@ -32,6 +34,7 @@ const initialState: AppConfig[] = [
     type: "notepad",
     name: "Notepad",
     icon: "./icons/notebook.png",
+    isPinned: true,
     data: "",
     isActive: false,
     isClosed: true,
@@ -44,6 +47,7 @@ const initialState: AppConfig[] = [
     type: "paint",
     name: "Paint",
     icon: "./icons/paint.png",
+    isPinned: true,
     isActive: false,
     isClosed: true,
     isMinimized: false,
@@ -57,8 +61,14 @@ const appLaunchSlice = createSlice({
   initialState,
   reducers: {
     closeApp(state, action: PayloadAction<string>) {
-      const app = state.find(a => a.id === action.payload);
-      if (app) {
+      const id = action.payload
+      const index = state.findIndex(a => a.id === id);
+      if (index === -1) return;
+      const app = state[index];
+
+      if (app.isPinned === false) {
+        state.splice(index, 1);
+      } else {
         app.isClosed = true;
         app.isActive = false;
       }
@@ -106,7 +116,7 @@ const appLaunchSlice = createSlice({
       }
     },
 
-    addTaskbarPinList(state, action: PayloadAction<AppConfig>) {
+    addNewApp(state, action: PayloadAction<AppConfig>) {
       state.push(action.payload);
     }
   },
@@ -118,7 +128,7 @@ export const {
   toggleMinimize,
   toggleMaximize,
   minimizeApp,
-  addTaskbarPinList
+  addNewApp
 } = appLaunchSlice.actions;
 
 export default appLaunchSlice.reducer;

@@ -8,66 +8,76 @@ import { formatBytes } from "../../components/utility/helper/unitConverter";
 import { Drive } from "../../components/ui/Icons/app-icons";
 import { useFileManagerContext } from "./FileManagerContextState";
 import FileFolder from "../../components/ui/FileManager/FileFolder";
+import { useDispatch } from "react-redux";
+import { addNewApp } from "../../features/AppLaunch";
+import { AppFinderForTaskbar } from "../../components/utility/helper/AppFinderForTaskbar";
 
 const ExplorerItems = () => {
+  const dispatch = useDispatch();
   const { location, setLocation } = useFileManagerContext();
-  const [selectedFolder, setSelectedFolder] = useState<Node | null>(null);
+  const [selectedNode, setSelectedNode] = useState<Node | null>(null);
 
   const fetchFolder = async () => {
-    const data = await folder(selectedFolder ? selectedFolder?.id : null);
+    const data = await folder(selectedNode ? selectedNode?.id : null);
     setLocation(data)
   }
 
   useEffect(() => {
     (async () => {
-      localStorage.removeItem("selectedFolder");
+      localStorage.removeItem("selectedNode");
       localStorage.removeItem("currentFolder");
       await fetchFolder();
     })();
   }, [])
 
   const handleSelect = (item: Node) => {
-    localStorage.setItem("selectedFolder", item.id)
-    setSelectedFolder(item);
+    localStorage.setItem("selectedNode", item.id)
+    setSelectedNode(item);
   }
   const handleOpen = async () => {
-    if (!selectedFolder) return;
-    localStorage.setItem("currentFolder", selectedFolder.id);
-    if(selectedFolder.type === "FILE") {
-      console.log("File : ", localStorage.getItem("selectedFolder"))
+    if (!selectedNode) return;
+    if(selectedNode.type === "FILE") {
+      const appDetails = AppFinderForTaskbar(selectedNode.name)
+      if(appDetails) {
+        dispatch(addNewApp(appDetails))
+      } else {
+        console.log("Unable to Open default program", selectedNode)
+      }
+      console.log("File : ", localStorage.getItem("selectedNode"))
     }
-    if(selectedFolder.type === "FOLDER"){
+    if(selectedNode.type === "FOLDER"){
       await fetchFolder();
+      localStorage.setItem("currentFolder", selectedNode.id);
     }
   }
 
   const handleBlankSpace = () => {
-    localStorage.removeItem("selectedFolder");
+    localStorage.removeItem("selectedNode");
   }
 
   useEffect(() => {
     const handleKeyDown = async (e: KeyboardEvent) => {
-      if (!selectedFolder?.parentId) { return; }
+      if (!selectedNode?.parentId) { return; }
 
       if ((e.target as HTMLElement)?.tagName === "INPUT") { return; }
 
       if (e.key === "Delete") {
-        await deleteFolder(selectedFolder?.id);
-        setLocation((prev) => prev && prev.filter((item) => item.id !== selectedFolder?.id));
+        await deleteFolder(selectedNode?.id);
+        setLocation((prev) => prev && prev.filter((item) => item.id !== selectedNode?.id));
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [selectedFolder]);
+  }, [selectedNode]);
 
   return (<>
     <div className="flex-1 flex flex-col text-black overflow-hidden">
       <div onClick={(e) => {
         e.preventDefault();
         e.stopPropagation();
-        setSelectedFolder(null)
+        setSelectedNode(null)
       }} className="flex-1 flex overflow-hidden">
         <SideExplorer />
         <div
@@ -99,7 +109,7 @@ const ExplorerItems = () => {
                     }}
                     draggable
                     className={`flex cursor-pointer border border-black/0 shrink-0 px-2 py-1 h-20 w-82 rounded-sm hover:bg-blue-100 justify-center items-start
-                      ${selectedFolder?.id === item.id && "bg-blue-100 border-black"}`}
+                      ${selectedNode?.id === item.id && "bg-blue-100 border-black"}`}
                   >
                     <Drive className="shrink-0 w-17 h-17 p-1 pointer-events-none" />
                     <div className="w-full ml-2 text-left">
@@ -121,7 +131,7 @@ const ExplorerItems = () => {
                   <FileFolder
                     key={item.id}
                     item={item}
-                    selected={selectedFolder?.id === item.id}
+                    selected={selectedNode?.id === item.id}
                     onClick={handleSelect}
                     onDoubleClick={handleOpen}
                   />

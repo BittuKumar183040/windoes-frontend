@@ -67,14 +67,14 @@ const SideExplorer = ({ className }: { className?: string }) => {
     }
 
     if (item.id === THIS_PC_ID) {
-      localStorage.removeItem("selectedFolder");
+      localStorage.removeItem("selectedNode");
       localStorage.removeItem("currentFolder");
       const data = await folder(null);
       setLocation(data);
       return;
     }
 
-    localStorage.setItem("selectedFolder", item.id);
+    localStorage.setItem("selectedNode", item.id);
 
     if (item.type === "FOLDER") {
       const data = await folder(item.id);
