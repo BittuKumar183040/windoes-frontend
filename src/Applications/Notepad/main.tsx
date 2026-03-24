@@ -1,7 +1,15 @@
-import { useEffect, useRef, useState } from "react"; 
+import { useEffect, useRef, useState } from "react";
 import { DotIcon, X } from "lucide-react";
 import Footer from "./Footer";
 import Window from "../../components/ui/common/Window";
+import type { AppConfig } from "../../features/AppLaunch";
+
+// Derives plain text from an HTML string without relying on component state.
+const getPlainText = (html: string): string => {
+  const el = document.createElement("div");
+  el.innerHTML = html;
+  return el.innerText;
+};
 
 const Menubar = () => {
   return (
@@ -24,28 +32,28 @@ const Menubar = () => {
 
 interface NotepadProps {
   isActive: boolean;
+  windowTitle: string;
+  app: AppConfig;
   onClose: () => void;
   onActive: () => void;
   onMinimize: () => void;
-  windowTitle: string;
-  data?: string;
 }
 
 const STORAGE_KEY_PREFIX = "notepad-state";
 
-const Notepad: React.FC<NotepadProps> = ({ isActive, onClose, onActive, onMinimize, windowTitle, data }) => {
-  const storageKey = `${STORAGE_KEY_PREFIX}:${windowTitle}`;
+const Notepad: React.FC<NotepadProps> = ({ isActive, app, onClose, onActive, onMinimize, windowTitle }) => {
+  const storageKey = `${STORAGE_KEY_PREFIX}:${windowTitle}${app.id ? ":" + app.id : ""}`;
   const editorRef = useRef<HTMLDivElement | null>(null);
-
-  const [textHtml, setHtmlText] = useState<string>("");
-  const [textNormal, setTextNormal] = useState<string>("");
+  console.log(app)
+  // Single source of truth — raw HTML from the contentEditable editor.
+  const [textHtml, setTextHtml] = useState<string>("");
   const [cursor, setCursor] = useState<number>(0);
 
   const [style] = useState({
     fontSize: "14px",
     letterSpacing: "0px",
   });
-  
+
   const placeCaretAtEnd = (el: HTMLElement) => {
     const range = document.createRange();
     const selection = window.getSelection();
@@ -58,51 +66,50 @@ const Notepad: React.FC<NotepadProps> = ({ isActive, onClose, onActive, onMinimi
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-
-    if(data) {
-      const parsed = JSON.parse(data) as { textHtml?: string };
-      const initialText = typeof parsed.textHtml === "string" ? parsed.textHtml : "";
-
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setHtmlText(initialText);
-      setTextNormal(data);
-
+    const data = app.data;
+    if (data) {
+      console.log(data);
+      try {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setTextHtml(data);
+        if (editorRef.current) {
+          editorRef.current.innerHTML = data;
+          editorRef.current.focus();
+          placeCaretAtEnd(editorRef.current);
+        }
+      } catch {
+        console.warn("File data is not parseable");
+      }
     } else {
       try {
-        const savedHtml = localStorage.getItem(storageKey);
-        const savedText = localStorage.getItem(storageKey + "Text");
-        if (!savedHtml || !savedText) return;
-  
-        const parsed = JSON.parse(savedHtml) as { textHtml?: string };
-        const initialText = typeof parsed.textHtml === "string" ? parsed.textHtml : "";
-  
-        setHtmlText(initialText);
-        setTextNormal(savedText);
+        const saved = localStorage.getItem(storageKey);
+        if (!saved) return;
+
+        const parsed = JSON.parse(saved) as { textHtml?: string };
+        const initialHtml = typeof parsed.textHtml === "string" ? parsed.textHtml : "";
+        console.log(initialHtml);
+        setTextHtml(initialHtml);
         if (editorRef.current) {
-          editorRef.current.innerHTML = initialText;
-          editorRef.current.focus()
+          editorRef.current.innerHTML = initialHtml;
+          editorRef.current.focus();
           placeCaretAtEnd(editorRef.current);
         }
       } catch (err) {
         console.warn("Invalid notepad state in localStorage", err);
       }
     }
-
   }, [storageKey]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const payload = JSON.stringify({ textHtml });
-    localStorage.setItem(storageKey, payload);
-    localStorage.setItem(storageKey + "Text", textNormal);
-  }, [textHtml, textNormal, storageKey]);
+    // Store only the HTML — plain text is always derivable from it.
+    localStorage.setItem(storageKey, JSON.stringify({ textHtml }));
+  }, [textHtml, storageKey]);
 
   const handleChange = (e: React.FormEvent<HTMLDivElement>) => {
-    setTextNormal(e.currentTarget.innerText)
-    setHtmlText(e.currentTarget.innerHTML);
+    setTextHtml(e.currentTarget.innerHTML);
     handleCursorEvent();
   };
-
 
   const getCaretIndex = (element: HTMLElement): number => {
     const selection = window.getSelection();
@@ -110,10 +117,8 @@ const Notepad: React.FC<NotepadProps> = ({ isActive, onClose, onActive, onMinimi
 
     const range = selection.getRangeAt(0);
     const preRange = range.cloneRange();
-
     preRange.selectNodeContents(element);
     preRange.setEnd(range.endContainer, range.endOffset);
-
     return preRange.toString().length;
   };
 
@@ -129,8 +134,11 @@ const Notepad: React.FC<NotepadProps> = ({ isActive, onClose, onActive, onMinimi
   const handleEnter = () => setTabShowCloseBtn(true);
   const handleLeave = () => setTabShowCloseBtn(false);
 
+  // Derive plain text on demand — no extra state needed.
+  const plainText = getPlainText(textHtml);
+
   const handleTabCloseClick = () => {
-    if (textNormal.trimEnd().length < 1) {
+    if (plainText.trimEnd().length < 1) {
       handleCloseWithoutSaving();
     } else {
       setShowCloseDialog(true);
@@ -171,10 +179,10 @@ const Notepad: React.FC<NotepadProps> = ({ isActive, onClose, onActive, onMinimi
             className="inner-rounded no-drag relative flex items-center text-md h-[30px] w-80 min-w-3 pl-6 pr-18 whitespace-nowrap rounded-t-lg text-black bg-[#f8f8f8]"
           >
             <p className="font-semibold text-[12px]">
-              {textNormal.trimEnd().length > 1 ? textNormal.slice(0, 35) : "Untitled"}
+              {plainText.trimEnd().length > 1 ? plainText.slice(0, 35) : "Untitled"}
             </p>
             <div className="no-drag absolute right-0">
-              {tabShowCloseBtn || textNormal.trimEnd().length < 1 ? (
+              {tabShowCloseBtn || plainText.trimEnd().length < 1 ? (
                 <button
                   onClick={handleTabCloseClick}
                   className="flex items-center text-gray-800 justify-center h-9 w-12 group mr-4 bg-[#f8f8f8] hover:bg-gray-200 outline-6 -outline-offset-1 outline-[#f8f8f8] rounded-md"
@@ -207,7 +215,7 @@ const Notepad: React.FC<NotepadProps> = ({ isActive, onClose, onActive, onMinimi
         className="flex-1 input bg-[#f9f9f9] outline-none border-none overflow-auto text-black pl-6 pt-5"
       />
 
-      <Footer text={textNormal} cursor={cursor} />
+      <Footer text={plainText} cursor={cursor} />
 
       {showCloseDialog && (
         <div className="absolute flex items-center justify-center h-full w-full bg-black/20 text-black">
@@ -215,7 +223,7 @@ const Notepad: React.FC<NotepadProps> = ({ isActive, onClose, onActive, onMinimi
             <div className="flex flex-col gap-4 p-[25px]">
               <p className="text-2xl font-semibold">Notepad</p>
               <p className="text-lg">
-                Do you want to save changes to {(textNormal || "Untitled").slice(0, 35)}.txt?
+                Do you want to save changes to {(plainText || "Untitled").slice(0, 35)}.txt?
               </p>
             </div>
             <div className="flex gap-2 bg-[#f3f3f3] border-t border-gray-300 p-6">

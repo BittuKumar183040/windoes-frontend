@@ -28,6 +28,7 @@ export const AppFinderForTaskbar = (fileName: string): AppConfig | null => {
         name: "Paint",
         icon: "./icons/paint.png",
         isPinned: false,
+        data: "",
         isActive: true,
         isClosed: false,
         isMinimized: false,

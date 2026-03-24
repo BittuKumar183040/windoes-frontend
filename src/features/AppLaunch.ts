@@ -35,7 +35,6 @@ const initialState: AppConfig[] = [
     name: "Notepad",
     icon: "./icons/notebook.png",
     isPinned: true,
-    data: "",
     isActive: false,
     isClosed: true,
     isMinimized: false,

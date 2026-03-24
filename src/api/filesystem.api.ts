@@ -42,3 +42,8 @@ export const createFile = async (parentId: string | null, name: string, size?: n
 
   return data;
 };
+
+export const downloadFile = async (id: string) => {
+  const { data } = await backendAPI.get(API_ENDPOINTS.FILESYSTEM.DOWNLOAD_BY_ID(id))
+  return data;
+}

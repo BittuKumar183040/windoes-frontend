@@ -8,12 +8,12 @@ import { formatBytes } from "../../components/utility/helper/unitConverter";
 import { Drive } from "../../components/ui/Icons/app-icons";
 import { useFileManagerContext } from "./FileManagerContextState";
 import FileFolder from "../../components/ui/FileManager/FileFolder";
-import { useDispatch } from "react-redux";
-import { addNewApp } from "../../features/AppLaunch";
-import { AppFinderForTaskbar } from "../../components/utility/helper/AppFinderForTaskbar";
+import useWhenFile from "./core/whenFile";
+import useWhenFolder from "./core/whenFolder";
 
 const ExplorerItems = () => {
-  const dispatch = useDispatch();
+  const whenFile = useWhenFile();
+  const whenFolder = useWhenFolder();
   const { location, setLocation } = useFileManagerContext();
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
 
@@ -36,18 +36,12 @@ const ExplorerItems = () => {
   }
   const handleOpen = async () => {
     if (!selectedNode) return;
-    if(selectedNode.type === "FILE") {
-      const appDetails = AppFinderForTaskbar(selectedNode.name)
-      if(appDetails) {
-        dispatch(addNewApp(appDetails))
-      } else {
-        console.log("Unable to Open default program", selectedNode)
-      }
-      console.log("File : ", localStorage.getItem("selectedNode"))
+    if (selectedNode.type === "FILE") {
+      whenFile(selectedNode)
     }
-    if(selectedNode.type === "FOLDER"){
-      await fetchFolder();
-      localStorage.setItem("currentFolder", selectedNode.id);
+    if (selectedNode.type === "FOLDER") {
+      const folder = await whenFolder(selectedNode)
+      setLocation(folder)
     }
   }
 
