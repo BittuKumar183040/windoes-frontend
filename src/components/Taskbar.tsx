@@ -7,7 +7,7 @@ import StartButton from "./ui/StartButton";
 import SystemTray from "./utility/SystemTray";
 import TimeAndDate from "./utility/TimeAndDate";
 import VolumeLevel from "./utility/VolumeLevel";
-import type { AppConfig } from "../Windows/Desktop";
+import type { AppConfig } from "../features/AppLaunch";
 
 interface TaskbarProps {
   apps: AppConfig[];

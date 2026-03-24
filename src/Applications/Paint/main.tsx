@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Window from "../../components/ui/common/Window";
 import Canvas from "./Canvas";
-import type { AppConfig } from "../../Windows/Desktop";
+import type { AppConfig } from "../../features/AppLaunch";
 
 const Menubar = () => {
   return (
