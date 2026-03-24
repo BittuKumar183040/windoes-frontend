@@ -4,23 +4,22 @@ import type { Node } from "./types/node";
 import { deleteFolder, folder } from "../../api/filesystem.api";
 import ProgressBar from "../../components/ui/common/ProgressBar";
 import { formatBytes } from "../../components/utility/helper/unitConverter";
-// import { extensionFinder } from "../../components/utility/helper/extensionFinder";
 import { Drive } from "../../components/ui/Icons/app-icons";
 import { useFileManagerContext } from "./FileManagerContextState";
 import FileFolder from "../../components/ui/FileManager/FileFolder";
-import { useDispatch } from "react-redux";
-import { addNewApp } from "../../features/AppLaunch";
-import { AppFinderForTaskbar } from "../../components/utility/helper/AppFinderForTaskbar";
+import useWhenFile from "./core/whenFile";
+import useWhenFolder from "./core/whenFolder";
 
 const ExplorerItems = () => {
-  const dispatch = useDispatch();
+  const whenFile = useWhenFile();
+  const whenFolder = useWhenFolder();
   const { location, setLocation } = useFileManagerContext();
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
 
   const fetchFolder = async () => {
     const data = await folder(selectedNode ? selectedNode?.id : null);
-    setLocation(data)
-  }
+    setLocation(data);
+  };
 
   useEffect(() => {
     (async () => {
@@ -28,121 +27,130 @@ const ExplorerItems = () => {
       localStorage.removeItem("currentFolder");
       await fetchFolder();
     })();
-  }, [])
+  }, []);
 
   const handleSelect = (item: Node) => {
-    localStorage.setItem("selectedNode", item.id)
+    localStorage.setItem("selectedNode", item.id);
     setSelectedNode(item);
-  }
+  };
+
   const handleOpen = async () => {
     if (!selectedNode) return;
-    if(selectedNode.type === "FILE") {
-      const appDetails = AppFinderForTaskbar(selectedNode.name)
-      if(appDetails) {
-        dispatch(addNewApp(appDetails))
-      } else {
-        console.log("Unable to Open default program", selectedNode)
-      }
-      console.log("File : ", localStorage.getItem("selectedNode"))
+    if (selectedNode.type === "FILE") {
+      whenFile(selectedNode);
     }
-    if(selectedNode.type === "FOLDER"){
-      await fetchFolder();
-      localStorage.setItem("currentFolder", selectedNode.id);
+    if (selectedNode.type === "FOLDER") {
+      const result = await whenFolder(selectedNode);
+      setLocation(result);
     }
-  }
+  };
 
   const handleBlankSpace = () => {
     localStorage.removeItem("selectedNode");
-  }
+  };
+
+  // Single place that keeps both `location` and `selectedNode` in sync when a
+  // rename happens inside FileFolder. FileFolder no longer needs setSelectedNode.
+  const handleRename = (id: string, newName: string) => {
+    setLocation((prev) =>
+      prev
+        ? prev.map((item) => (item.id === id ? { ...item, name: newName } : item))
+        : prev
+    );
+    setSelectedNode((prev) => (prev?.id === id ? { ...prev, name: newName } : prev));
+  };
 
   useEffect(() => {
     const handleKeyDown = async (e: KeyboardEvent) => {
-      if (!selectedNode?.parentId) { return; }
-
-      if ((e.target as HTMLElement)?.tagName === "INPUT") { return; }
+      if (!selectedNode?.parentId) return;
+      if ((e.target as HTMLElement)?.tagName === "INPUT") return;
 
       if (e.key === "Delete") {
         await deleteFolder(selectedNode?.id);
-        setLocation((prev) => prev && prev.filter((item) => item.id !== selectedNode?.id));
+        setLocation((prev) =>
+          prev ? prev.filter((item) => item.id !== selectedNode?.id) : prev
+        );
       }
     };
     window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [selectedNode]);
 
-  return (<>
-    <div className="flex-1 flex flex-col text-black overflow-hidden">
-      <div onClick={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        setSelectedNode(null)
-      }} className="flex-1 flex overflow-hidden">
-        <SideExplorer />
+  return (
+    <>
+      <div className="flex-1 flex flex-col text-black overflow-hidden">
         <div
-          onClick={handleBlankSpace}
-          className="flex-1 flex flex-wrap items-start justify-start content-start gap-2 p-4 bg-white overflow-auto"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setSelectedNode(null);
+          }}
+          className="flex-1 flex overflow-hidden"
         >
-          {location?.length === 0 ? (
-            <div className=" flex justify-center w-full">
-              <p className="text-gray-800 text-lg select-none">
-                This folder is empty.
-              </p>
-            </div>
-          ) : (
-            location?.map((item) => {
-              // Drive (root folders)
-              if (item.type === "FOLDER" && item.parentId === null) {
-                return (
-                  <button
-                    key={item.id}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      handleSelect(item);
-                    }}
-                    onDoubleClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      handleOpen();
-                    }}
-                    draggable
-                    className={`flex cursor-pointer border border-black/0 shrink-0 px-2 py-1 h-20 w-82 rounded-sm hover:bg-blue-100 justify-center items-start
-                      ${selectedNode?.id === item.id && "bg-blue-100 border-black"}`}
-                  >
-                    <Drive className="shrink-0 w-17 h-17 p-1 pointer-events-none" />
-                    <div className="w-full ml-2 text-left">
-                      <p className="text-lg">{item.name}</p>
-                      <ProgressBar
-                        className="flex-1"
-                        value={item.size}
-                        minPercentage={0}
-                        maxValue={5e11}
-                      />
-                      <p className="text-md text-gray-700">
-                        {formatBytes(item.size)} free of {formatBytes(4e11)}
-                      </p>
-                    </div>
-                  </button>
-                );
-              } else {
-                return (
-                  <FileFolder
-                    key={item.id}
-                    item={item}
-                    selected={selectedNode?.id === item.id}
-                    onClick={handleSelect}
-                    onDoubleClick={handleOpen}
-                  />
-                );
-              }
-            })
-          )}
+          <SideExplorer />
+          <div
+            onClick={handleBlankSpace}
+            className="flex-1 flex flex-wrap items-start justify-start content-start gap-2 p-4 bg-white overflow-auto"
+          >
+            {location?.length === 0 ? (
+              <div className="flex justify-center w-full">
+                <p className="text-gray-800 text-lg select-none">
+                  This folder is empty.
+                </p>
+              </div>
+            ) : (
+              location?.map((item) => {
+                if (item.type === "FOLDER" && item.parentId === null) {
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleSelect(item);
+                      }}
+                      onDoubleClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleOpen();
+                      }}
+                      draggable
+                      className={`flex cursor-pointer border border-black/0 shrink-0 px-2 py-1 h-20 w-82 rounded-sm hover:bg-blue-100 justify-center items-start
+                        ${selectedNode?.id === item.id && "bg-blue-100 border-black"}`}
+                    >
+                      <Drive className="shrink-0 w-17 h-17 p-1 pointer-events-none" />
+                      <div className="w-full ml-2 text-left">
+                        <p className="text-lg">{item.name}</p>
+                        <ProgressBar
+                          className="flex-1"
+                          value={item.size}
+                          minPercentage={0}
+                          maxValue={5e11}
+                        />
+                        <p className="text-md text-gray-700">
+                          {formatBytes(item.size)} free of {formatBytes(4e11)}
+                        </p>
+                      </div>
+                    </button>
+                  );
+                } else {
+                  return (
+                    <FileFolder
+                      key={item.id}
+                      item={item}
+                      selected={selectedNode?.id === item.id}
+                      onClick={handleSelect}
+                      onDoubleClick={handleOpen}
+                      onRename={handleRename}
+                    />
+                  );
+                }
+              })
+            )}
+          </div>
         </div>
       </div>
-    </div>
-  </>
+    </>
   );
 };
 
