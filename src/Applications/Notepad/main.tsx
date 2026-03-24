@@ -179,7 +179,7 @@ const Notepad: React.FC<NotepadProps> = ({ isActive, app, onClose, onActive, onM
             className="inner-rounded no-drag relative flex items-center text-md h-[30px] w-80 min-w-3 pl-6 pr-18 whitespace-nowrap rounded-t-lg text-black bg-[#f8f8f8]"
           >
             <p className="font-semibold text-[12px]">
-              {plainText.trimEnd().length > 1 ? plainText.slice(0, 35) : "Untitled"}
+              {app?.node?.name ? app.node.name : plainText.trimEnd().length > 1 ? plainText.slice(0, 35) : "Untitled"}
             </p>
             <div className="no-drag absolute right-0">
               {tabShowCloseBtn || plainText.trimEnd().length < 1 ? (

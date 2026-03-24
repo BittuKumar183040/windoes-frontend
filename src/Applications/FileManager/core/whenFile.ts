@@ -13,8 +13,10 @@ const useWhenFile = () => {
     const appDetails = AppFinderForTaskbar(selectedNode.name)  // with using file extension idenfity and give application info.
     if (appDetails) {
       const data = await downloadFile(selectedNode.id)
+      console.log(selectedNode)
       console.log(data)
       appDetails.data = data
+      appDetails.node = selectedNode
       dispatch(addNewApp(appDetails))
     } else {
       console.log("Unable to Open default program", selectedNode)
