@@ -2,8 +2,8 @@ import { useState } from 'react';
 import type { Node } from '../../../Applications/FileManager/types/node';
 import { useEffect, useRef } from 'react';
 import { renameFolder } from '../../../api/filesystem.api';
-import { IconManger } from '../Icons/IconManger';
 import { getExtension, removeExtension } from '../../utility/helper/extensionFinder';
+import IconManager from '../Icons/IconManger';
 
 interface FolderProps {
   item: Node;
@@ -88,11 +88,11 @@ const FileFolder = ({ item, initActive = false, selected, onClick, onDoubleClick
       onClick={(e) => { e.preventDefault(); e.stopPropagation(); onClick(item); }}
       onDoubleClick={(e) => { e.preventDefault(); e.stopPropagation(); onDoubleClick(item); }}
       className={`flex cursor-pointer border border-black/0 shrink-0 px-2 py-1 h-20 w-82 rounded-sm hover:bg-blue-100 justify-center items-start
-        ${selected && "bg-blue-100 border-black/100 "}
+        ${selected && "bg-blue-100 border-black "}
       `}
     >
-      {item.type === "FOLDER" && <IconManger extension='' />}
-      {item.type === "FILE" && <IconManger extension={extension} />}
+      {item.type === "FOLDER" && <IconManager />}
+      {item.type === "FILE" && <IconManager extension={extension} />}
       <div className="w-full ml-1 mt-2 text-left">
         <input
           ref={inputRef}
