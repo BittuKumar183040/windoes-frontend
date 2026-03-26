@@ -6,7 +6,7 @@ const UserProfile = ({ label, src, onClick }: { label?: string, src?: string, on
       <UserProfileImage src={src} size={32} />
       { label && 
         <div className="flex flex-col">
-          <span className=" text-sm max-w-52 whitespace-nowrap overflow-hidden text-ellipsis">{label}</span>
+          <span className=" text-md max-w-52 whitespace-nowrap overflow-hidden text-ellipsis">{label}</span>
         </div>
       }
     </div>
