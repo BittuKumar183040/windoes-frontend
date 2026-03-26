@@ -20,6 +20,7 @@ const Signup = () => {
   const [isIncorrectPasswordState, setIsIncorrectPasswordState] = useState(false);
   const [password, setPassword] = useState("");
   const [switchUser, setSwitchUser] = useState(false);
+  const [isLoading, setLoading] = useState(false);
   const [isLogoLoading, setLogoLoading] = useState(false);
   const [logo, setLogo] = useState<string | null>(null);
 
@@ -44,9 +45,9 @@ const Signup = () => {
 
   const loginUser = async () => {
     try {
+      setLoading(true)
       const usernameOrEmail = user.username || user.email;
       const payload = { usernameOrEmail, password };
-
       const data = await login(payload)
       localStorage.setItem("user", JSON.stringify(data.user))
       setUser(data.user)
@@ -58,6 +59,8 @@ const Signup = () => {
         console.error("Login failed : ", error);
       }
       setIsIncorrectPasswordState(true);
+    } finally {
+      setLoading(false)
     }
   };
 
@@ -87,7 +90,7 @@ const Signup = () => {
   const handleRegisterUser = () => {
     navigate('/register');
   }
-
+  
   return (
     <div onContextMenu={(e) => e.preventDefault()} className='relative h-dvh w-full overflow-hidden'>
       <motion.div
@@ -125,6 +128,7 @@ const Signup = () => {
                     type="text"
                     value={password}
                     onEnterPress={() => loginUser()}
+                    isLoading={isLoading}
                     onChange={(value: string) => setPassword(value)} placeholder='Password'
                     autoFocus
                   />
