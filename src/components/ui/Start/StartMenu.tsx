@@ -61,6 +61,10 @@ const StartMenu = forwardRef<HTMLDivElement, StartMenuProps>(
       navigate("/signup");
     }
 
+    const shutdown = () => {
+      window.close();
+    }
+
     return (
       <ToolTipNavbar className="w-11/12 md:w-6/12 p-0 mx-auto overflow-hidden bg-transparent text-black backdrop-blur-sm" anchorRef={buttonRef} visible={open} placement="top" openDelayMs={0}>
         <div ref={startContainerRef}>
@@ -132,7 +136,7 @@ const StartMenu = forwardRef<HTMLDivElement, StartMenuProps>(
                 <Settings strokeWidth={1} size={18} />
               </button>
               <button className="flex gap-4 p-4 rounded-md hover:bg-gray-100/70 transition" >
-                <Power strokeWidth={1} size={18} />
+                <Power onClick={shutdown} strokeWidth={1} size={18} />
               </button>
             </div>
           </div>

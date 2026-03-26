@@ -1,23 +1,12 @@
 import { Rnd, type RndDragCallback, type RndResizeCallback } from "react-rnd";
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
 import Titlebar from "./Titlebar";
+import type { WindowProps } from "../../../types/applicationTypes";
 
 const edgeVertical = "flex items-center justify-center h-4 w-full";
 const edgeHorizontal = "flex items-center justify-center w-4 h-full";
 const cornerClass = "flex items-center justify-center w-7 h-7";
 
-interface WindowProps {
-  children: ReactNode;
-  onClose: () => void;
-  onActive: () => void;
-  onMinimize: () => void;
-  windowTitle: string;
-  titleHeight: number;
-  isActive: boolean;
-  Title: React.ReactNode;
-  minHeight?: number;
-  minWidth?: number;
-}
 
 interface WindowState { x: number; y: number; width: number; height: number }
 

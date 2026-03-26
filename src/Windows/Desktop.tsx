@@ -5,34 +5,18 @@ import Notepad from "../Applications/Notepad/main";
 import FileManager from "../Applications/FileManager/main";
 import Taskbar from "../components/Taskbar";
 import Paint from "../Applications/Paint/main";
+import Settings from "../Applications/Settings/main";
 import type { RootState } from "../../store";
 import DesktopEvent from "../components/RightClickContext/DesktopEvent";
 
-import {
-  closeApp,
-  activateApp,
-  toggleMinimize,
-  toggleMaximize,
-  minimizeApp,
-  type AppConfig,
-} from "../features/AppLaunch";
+import { closeApp, activateApp, toggleMinimize, toggleMaximize, minimizeApp} from "../features/AppLaunch";
+import type { AppComponentsProps, AppType } from "../types/applicationTypes";
 
-export type AppType = "fileManager" | "notepad" | "paint";
-
-export interface WindowProps {
-  isActive: boolean;
-  windowTitle: string;
-  app: AppConfig;
-  onClose: () => void;
-  onActive: () => void;
-  onMaximize: () => void;
-  onMinimize: () => void;
-}
-
-const AppComponent: Record<AppType, React.FC<WindowProps>> = {
+const AppComponent: Record<AppType, React.FC<AppComponentsProps>> = {
   fileManager: FileManager,
   notepad: Notepad,
   paint: Paint,
+  settings: Settings
 };
 
 const Desktop = () => {

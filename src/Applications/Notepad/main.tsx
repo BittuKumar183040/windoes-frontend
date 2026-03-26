@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { DotIcon, X } from "lucide-react";
 import Footer from "./Footer";
 import Window from "../../components/ui/common/Window";
-import type { AppConfig } from "../../features/AppLaunch";
+import type { AppComponentsProps } from "../../types/applicationTypes";
 
 // Derives plain text from an HTML string without relying on component state.
 const getPlainText = (html: string): string => {
@@ -30,18 +30,9 @@ const Menubar = () => {
   );
 };
 
-interface NotepadProps {
-  isActive: boolean;
-  windowTitle: string;
-  app: AppConfig;
-  onClose: () => void;
-  onActive: () => void;
-  onMinimize: () => void;
-}
-
 const STORAGE_KEY_PREFIX = "notepad-state";
 
-const Notepad: React.FC<NotepadProps> = ({ isActive, app, onClose, onActive, onMinimize, windowTitle }) => {
+const Notepad: React.FC<AppComponentsProps> = ({ isActive, app, onClose, onActive, onMinimize, windowTitle }) => {
   const storageKey = `${STORAGE_KEY_PREFIX}:${windowTitle}${app.id ? ":" + app.id : ""}`;
   const editorRef = useRef<HTMLDivElement | null>(null);
   console.log(app)

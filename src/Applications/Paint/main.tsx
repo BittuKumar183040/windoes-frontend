@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Window from "../../components/ui/common/Window";
 import Canvas from "./Canvas";
-import type { AppConfig } from "../../features/AppLaunch";
+import type { AppComponentsProps } from "../../types/applicationTypes";
 
 const Menubar = () => {
   return (
@@ -22,16 +22,7 @@ const Menubar = () => {
   );
 };
 
-interface paintProps {
-  isActive: boolean;
-  onClose: () => void;
-  onActive: () => void;
-  onMinimize: () => void;
-  app: AppConfig;
-}
-
-
-const Paint: React.FC<paintProps> = ({ isActive, onClose, onActive, onMinimize, app }) => {
+const Paint: React.FC<AppComponentsProps> = ({ isActive, onClose, onActive, onMinimize, app }) => {
 
   const [showCloseDialog, setShowCloseDialog] = useState(false);
 

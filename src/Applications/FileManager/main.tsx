@@ -5,17 +5,9 @@ import Navigation from "./Navigation";
 import Actions from "./Actions";
 import { FileManagerProvider } from "./FileManagerContext";
 import FolderStatusBar from "./FolderStatusBar";
+import type { AppComponentsProps } from "../../types/applicationTypes";
 
-interface FileManagerProps {
-  isActive: boolean;
-  onClose: () => void;
-  onActive: () => void;
-  onMinimize: () => void;
-  windowTitle: string;
-}
-
-
-const FileManager: React.FC<FileManagerProps> = ({
+const FileManager: React.FC<AppComponentsProps> = ({
   isActive,
   onClose,
   onActive,
