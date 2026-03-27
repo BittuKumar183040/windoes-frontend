@@ -2,6 +2,8 @@ import { Rnd, type RndDragCallback, type RndResizeCallback } from "react-rnd";
 import { useState } from "react";
 import Titlebar from "./Titlebar";
 import type { WindowProps } from "../../../types/applicationTypes";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../../../store";
 
 const edgeVertical = "flex items-center justify-center h-4 w-full";
 const edgeHorizontal = "flex items-center justify-center w-4 h-full";
@@ -16,6 +18,7 @@ const DEFAULT_STATE: WindowState = { x: 100, y: 100, width: 400, height: 450 };
 const Window = ({ children, onClose, onActive, onMinimize, windowTitle, titleHeight, isActive, Title, minHeight = 120, minWidth = 150 }: WindowProps) => {
 
   const storageKey = `${STORAGE_KEY_PREFIX}:${windowTitle}`;
+  const themeColor = useSelector((state: RootState) => state.globalSettings.titleColor)
   const [isFullScreen, setFullScreen] = useState(false);
 
   const [state, setState] = useState<WindowState>(() => {
@@ -105,7 +108,9 @@ const Window = ({ children, onClose, onActive, onMinimize, windowTitle, titleHei
         bottomRight: (<div className={cornerClass} style={{ cursor: "url('/cursors/diagonal-resize-1_white.cur'), se-resize" }} />),
       }}
     >
-      <div className={`flex flex-col bg-transparent ${isFullScreen  ? "rounded-none" : "rounded-xl"} overflow-hidden border shadow-xl border-black/40 h-full`}>
+      <div
+        style={{...themeColor.style}} 
+        className={`flex flex-col ${themeColor} ${isFullScreen  ? "rounded-none" : "rounded-xl"} overflow-hidden border shadow-xl border-black/40 h-full`}>
         <Titlebar onClose={onClose} onMaximize={toggleMaximizeWindow} onMinimize={onMinimize} Title={Title} height={titleHeight} />
         {children}
       </div>

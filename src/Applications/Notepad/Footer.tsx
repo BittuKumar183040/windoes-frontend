@@ -1,13 +1,9 @@
-import { useSelector } from "react-redux";
-import type { RootState } from "../../../store";
-
 interface FooterProps {
   text: string;
   cursor: number;
 }
 
 const Footer = ({ text, cursor }: FooterProps) => {
-  const themeColor = useSelector((state: RootState) => state.globalSettings.titleColor)
 
   const calculateChar = (s: string) => {
     const len = s.trimEnd().length;
@@ -46,8 +42,7 @@ const Footer = ({ text, cursor }: FooterProps) => {
 
   return (
     <footer 
-      style={{...themeColor.style}}
-      className={`flex justify-between items-center ${themeColor.value} border-t border-gray-200/40 p-2`}>
+      className={`flex justify-between items-center border-t border-gray-200/40 p-2`}>
       <p className="pl-4 pr-10 whitespace-nowrap w-30">Ln {line}, Col {column}</p>
       <p className="border-l px-3 min-w-36 border-gray-200/40 whitespace-nowrap">{calculateChar(text)}</p>
       <p className="flex-1 border-l px-3 border-gray-200/40 whitespace-nowrap">Plain text</p>

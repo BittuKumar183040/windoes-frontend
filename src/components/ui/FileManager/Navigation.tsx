@@ -18,7 +18,7 @@ const NavigationButton = ({ Icon, iconStyle, className, onClick, isRoot}: Button
     <button
       disabled={computedIsRoot}
       onClick={onClick}
-      className={`h-[32px] w-[32px] flex bg-transparent items-center justify-center text-black rounded-md hover:bg-[#eee] transition-colors 
+      className={`h-[32px] w-[32px] flex items-center justify-center rounded-md transition-colors 
       ${computedIsRoot ? "pointer-events-none opacity-50" : ""}
       ${className}`}
     >

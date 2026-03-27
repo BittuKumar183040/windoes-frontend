@@ -4,6 +4,8 @@ import { useEffect, useRef } from 'react';
 import { renameFolder } from '../../../api/filesystem.api';
 import { getExtension, removeExtension } from '../../utility/helper/extensionFinder';
 import IconManager from '../Icons/IconManger';
+import { useSelector } from 'react-redux';
+import type { RootState } from '../../../../store';
 
 interface FolderProps {
   item: Node;
@@ -20,7 +22,8 @@ const FileFolder = ({ item, initActive = false, selected, onClick, onDoubleClick
   const [inputValue, setInputValue] = useState(item.name);
   const extension = getExtension(item.name);
   const inputRef = useRef<HTMLInputElement | null>(null);
-
+  const themeColor = useSelector((state: RootState) => state.globalSettings.titleColor)
+  
   const handleTextClick = () => {
     if (selected) {
       setRenameActive(true);
@@ -87,8 +90,12 @@ const FileFolder = ({ item, initActive = false, selected, onClick, onDoubleClick
     <button
       onClick={(e) => { e.preventDefault(); e.stopPropagation(); onClick(item); }}
       onDoubleClick={(e) => { e.preventDefault(); e.stopPropagation(); onDoubleClick(item); }}
-      className={`flex cursor-pointer border border-black/0 shrink-0 px-2 py-1 h-20 w-82 rounded-sm hover:bg-blue-100 justify-center items-start
-        ${selected && "bg-blue-100 border-black "}
+      className={`flex cursor-pointer border border-black/0 shrink-0 px-2 py-1 h-20 w-82 rounded-sm justify-center items-start
+        ${themeColor.theme === "light" ? 
+          ` hover:bg-blue-100 ${selected && "bg-blue-100 border-black "}` : 
+          ` hover:bg-gray-800 ${selected && "bg-gray-800 border-black "}`
+        }
+        
       `}
     >
       {item.type === "FOLDER" && <IconManager />}

@@ -40,6 +40,7 @@ const Paint: React.FC<AppComponentsProps> = ({ isActive, onClose, onActive, onMi
   const handleCancel = () => {
     setShowCloseDialog(false);
   };
+  const themeColor = useSelector((state: RootState) => state.globalSettings.titleColor)
 
   return (
     <Window
@@ -63,15 +64,19 @@ const Paint: React.FC<AppComponentsProps> = ({ isActive, onClose, onActive, onMi
       {/* <Footer text={textNormal} cursor={cursor} /> */}
 
       {showCloseDialog && (
-        <div className="absolute flex items-center justify-center h-full w-full bg-black/20 text-black">
-          <div className="bg-white rounded-xl overflow-hidden shadow-2xl">
+        <div className={`absolute flex items-center justify-center h-full w-full backdrop-blur-xs`}>
+          <div 
+            style={{...themeColor.style}} 
+            className={`rounded-xl overflow-hidden shadow-2xl opacity-80
+            ${themeColor.value}
+            `}>
             <div className="flex flex-col gap-4 p-[25px]">
               <p className="text-2xl font-semibold">Do you want to save your work?</p>
               <p className="text-lg">
                 There are unsaved changes in "Untitled".
               </p>
             </div>
-            <div className="flex gap-2 bg-[#f3f3f3] border-t border-gray-300 p-6">
+            <div className="flex gap-2 border-t border-gray-400/50 p-6">
               <button
                 onClick={handleSave}
                 className="flex items-center justify-center text-lg font-medium w-[128px] h-[30px] rounded-md bg-[#5d6e79] text-white hover:bg-[#5d6e79]/90 active:bg-[#5d6e79]/70 transition"

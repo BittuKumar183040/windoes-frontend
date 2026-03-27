@@ -19,7 +19,7 @@ interface ActionButtonsProps {
 
 export const ActionButtons = ({label, isDisabled, onClick, Icon, iconProps, className}: ActionButtonsProps) => {
   return (
-    <button disabled={isDisabled} onClick={onClick} className={`flex text-lg items-center justify-between rounded-md gap-2 hover:bg-gray-100 p-3 px-6
+    <button disabled={isDisabled} onClick={onClick} className={`flex text-lg items-center justify-between rounded-md gap-2 hover:bg-black/50 p-3 px-6
       ${isDisabled && " pointer-events-none opacity-50"}
       ${className}`}>
       {Icon && <Icon size={iconProps?.size || 15} absoluteStrokeWidth={iconProps?.absoluteStrokeWidth} />}

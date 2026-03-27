@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { Rnd } from "react-rnd";
 import { folder, overview } from "../../api/filesystem.api";
 import { useFileManagerContext } from "./FileManagerContextState";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../../store";
 
 interface SideMenuItem {
   id: string;
@@ -45,6 +47,7 @@ const SideExplorer = ({ className }: { className?: string }) => {
     () => new Set([THIS_PC_ID])
   );
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const themeColor = useSelector((state: RootState) => state.globalSettings.titleColor)
 
   const toggleOpen = (id: string) => {
     setOpenIds((prev) => {
@@ -133,8 +136,13 @@ const SideExplorer = ({ className }: { className?: string }) => {
             onClick={() => {
               void handleItemClick(item);
             }}
-            className={`w-full text-left flex min-w-56 items-center gap-2 py-2 hover:bg-sky-100 transition-all active:outline active:outline-black
-              ${selectedId === item.id ? "outline outline-gray-500 bg-gray-200" : "outline-none border-white"}`}
+            className={`w-full text-left flex min-w-56 items-center gap-2 py-2 transition-all active:outline active:outline-black
+              ${selectedId === item.id ? 
+                themeColor.theme === "light" ? "outline outline-gray-500 bg-gray-200 hover:bg-sky-100" : "outline outline-gray-700 bg-gray-800 hover:bg-gray-800"
+                : 
+                themeColor.theme === "light" ? "outline-none border-white hover:bg-sky-100" :  "outline-none border-white hover:bg-gray-900"
+              }
+            `}
             style={{ paddingLeft: 16 + level * 12 }}
           >
             {hasChildren ? (
@@ -178,9 +186,7 @@ const SideExplorer = ({ className }: { className?: string }) => {
   return (
     <Rnd
       size={{ width: sidebarWidth, height: "100%" }}
-      onResizeStop={(_e, _dir, ref) => {
-        setSidebarWidth(ref.offsetWidth);
-      }}
+      onResizeStop={(_e, _dir, ref) => { setSidebarWidth(ref.offsetWidth) }}
       minWidth={80}
       enableResizing={{
         right: true,
@@ -197,13 +203,12 @@ const SideExplorer = ({ className }: { className?: string }) => {
       resizeHandleStyles={{ right: { width: "2px", right: "0px" } }}
       resizeHandleComponent={{
         right: (
-          <div
-            className="flex items-center justify-center w-2 h-full"
+          <div className="flex items-center justify-center w-2 h-full"
             style={{ cursor: "url('/cursors/horizontal-resize_white.cur'), e-resize" }}
           />
         ),
       }}
-      className="shrink-0 border-r border-gray-200 bg-white"
+      className="shrink-0 border-r border-gray-200/50"
       style={{ position: "relative" }}
     >
       <div className="h-full w-full overflow-y-auto overflow-x-hidden px-1 pt-2">

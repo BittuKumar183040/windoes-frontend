@@ -3,6 +3,8 @@ import { createFile, createFolder } from "../../api/filesystem.api"
 import { useFileManagerContext } from "./FileManagerContextState";
 import { ActionButtons } from "../../components/ui/FileManager/ActionButtons";
 import { SeperatorVertical } from "../../components/ui/FileManager/Seperator";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../../store";
 
 const Actions = () => {
   const { location, setLocation } = useFileManagerContext();
@@ -20,9 +22,11 @@ const Actions = () => {
   }
 
   const isRoot = location?.some(item => item.parentId === null) ?? false;
+  const themeColor = useSelector((state: RootState) => state.globalSettings.titleColor)
 
   return (
-    <div className=" bg-white text-black flex items-center gap-2 h-[48px] shrink-0 border-b px-4 border-gray-300">
+    <div className={`flex items-center gap-2 h-[48px] shrink-0 border-b px-4 border-gray-400/50
+      ${themeColor.theme === "light" ? "bg-white text-black" : "bg-black text-white"}`}>
       <ActionButtons label="New Folder" onClick={handleNewFolder} isDisabled={isRoot} Icon={PlusCircle} iconProps={{size:15}} />
       <SeperatorVertical />
       <ActionButtons label="New Document" onClick={() => handleNewFile("New Document.txt")} isDisabled={isRoot} Icon={File} iconProps={{size:15}} />

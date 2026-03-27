@@ -9,6 +9,8 @@ import { useFileManagerContext } from "./FileManagerContextState";
 import FileFolder from "../../components/ui/FileManager/FileFolder";
 import useWhenFile from "./core/whenFile";
 import useWhenFolder from "./core/whenFolder";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../../store";
 
 const ExplorerItems = () => {
   const whenFile = useWhenFile();
@@ -76,9 +78,13 @@ const ExplorerItems = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [selectedNode]);
 
+  const themeColor = useSelector((state: RootState) => state.globalSettings.titleColor)
+
   return (
     <>
-      <div className="flex-1 flex flex-col text-black overflow-hidden">
+      <div className={`flex-1 flex flex-col overflow-hidden 
+          ${themeColor.theme === "light" ? " text-black bg-white" : " text-white bg-black"}
+        `}>
         <div
           onClick={(e) => {
             e.preventDefault();
@@ -90,11 +96,13 @@ const ExplorerItems = () => {
           <SideExplorer />
           <div
             onClick={handleBlankSpace}
-            className="flex-1 flex flex-wrap items-start justify-start content-start gap-2 p-4 bg-white overflow-auto"
+            className="flex-1 flex flex-wrap items-start justify-start content-start gap-2 p-4 overflow-auto"
           >
             {location?.length === 0 ? (
               <div className="flex justify-center w-full">
-                <p className="text-gray-800 text-lg select-none">
+                <p className={`text-gray-800 text-lg select-none
+                  ${themeColor.theme === "light" ? " text-black" : " text-white"}
+                  `}>
                   This folder is empty.
                 </p>
               </div>
@@ -115,8 +123,8 @@ const ExplorerItems = () => {
                         handleOpen();
                       }}
                       draggable
-                      className={`flex cursor-pointer border border-black/0 shrink-0 px-2 py-1 h-20 w-82 rounded-sm hover:bg-blue-100 justify-center items-start
-                        ${selectedNode?.id === item.id && "bg-blue-100 border-black"}`}
+                      className={`flex cursor-pointer border border-black/0 shrink-0 px-2 py-1 h-20 w-82 rounded-sm hover:bg-blue-400/30 justify-center items-start
+                        ${selectedNode?.id === item.id && "bg-blue-400/30 border-black/50"}`}
                     >
                       <Drive className="shrink-0 w-17 h-17 p-1 pointer-events-none" />
                       <div className="w-full ml-2 text-left">
@@ -127,7 +135,7 @@ const ExplorerItems = () => {
                           minPercentage={0}
                           maxValue={5e11}
                         />
-                        <p className="text-md text-gray-700">
+                        <p className="text-md text-gray-500">
                           {formatBytes(item.size)} free of {formatBytes(4e11)}
                         </p>
                       </div>

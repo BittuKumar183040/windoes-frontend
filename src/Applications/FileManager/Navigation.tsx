@@ -5,6 +5,8 @@ import type { Path } from "./types/node";
 import { useFileManagerContext } from "./FileManagerContextState";
 import { folder } from "../../api/filesystem.api";
 import NavigationButton from "../../components/ui/FileManager/Navigation";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../../store";
 
 const Navigation = () => {
   const { location, setLocation } = useFileManagerContext();
@@ -76,9 +78,11 @@ const Navigation = () => {
       setLocation(data)
     };
   }
+  const themeColor = useSelector((state: RootState) => state.globalSettings.titleColor)
 
   return (
-    <div className="min-h-[48px] flex justify-between items-center bg-[#f1f5f7] border-b border-black/20">
+    <div
+      className={`min-h-[48px] flex justify-between items-center border-b border-black/20`}>
       <div className="flex gap-4 px-4 items-center">
         <NavigationButton Icon={ArrowLeft} isRoot={isRoot} onClick={handleBack}/>
         <NavigationButton Icon={ArrowRight} isRoot={isRoot} onClick={handleForward} />
@@ -88,14 +92,16 @@ const Navigation = () => {
       
       <div
         ref={addressBarRef}
-        className="relative h-[32px] flex flex-1 items-center text-xl text-black bg-linear-to-b from-white to-transparent rounded-md transition-all"
+        className={`relative h-[32px] flex flex-1 items-center text-xl mr-2 rounded-md transition-all
+          ${themeColor.theme === "light" ? "text-black bg-linear-to-b from-white to-transparent": "text-white bg-linear-to-b from-gray-400/20 to-transparent"}
+        `}
       >
         <div className={` absolute left-0 z-10 flex items-center gap-3 ${addressBarActive ? "opacity-0" : "opacity-100"}`}>
           <NavigationButton Icon={System} className="ml-2 pointer-events-none transition-opacity duration-150" />
           {path.map((item) => <React.Fragment key={item.id} >
             <button
               onClick={() => onNodeClick(item)}
-              className=" flex items-center justify-center text-md px-3 py-px pt-1 hover:bg-gray-200/80 rounded-sm">
+              className=" flex items-center justify-center text-md px-3 py-px pt-1 hover:bg-black/50 rounded-sm">
               {item.label}
             </button>
             <ChevronRight size={16} strokeWidth={1} />
@@ -112,7 +118,9 @@ const Navigation = () => {
         />
       </div>
 
-      <div className="relative h-[32px] text-xl text-black flex w-56 items-center bg-linear-to-b from-white to-transparent rounded-md transition-all">
+      <div className={`relative h-[32px] text-xl flex w-56 items-center rounded-md transition-all mr-2
+        ${themeColor.theme === "light" ? "text-black bg-linear-to-b from-white to-transparent" : "text-white bg-linear-to-b from-gray-400/20 to-transparent"}
+      `}>
         <input
           type="text"
           value={searchValue}
