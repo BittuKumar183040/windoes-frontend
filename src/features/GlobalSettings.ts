@@ -22,6 +22,12 @@ const globalSettingsSlice = createSlice({
 
     setTitleColor(state, action: PayloadAction<TypeTheme>) {
       state.titleColor = action.payload;
+      const theme = action.payload.theme
+      if(theme === "dark") {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
     },
   },
 });

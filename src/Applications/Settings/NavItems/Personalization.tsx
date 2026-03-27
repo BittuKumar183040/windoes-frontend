@@ -14,7 +14,7 @@ const Personalization = () => {
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-sm font-semibold text-black/50 uppercase tracking-widest mb-3">
+        <h2 className="text-sm font-semibold text-black/50 dark:text-white uppercase tracking-widest mb-3">
           Title Bar Color
         </h2>
 
