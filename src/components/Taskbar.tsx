@@ -7,7 +7,9 @@ import StartButton from "./ui/StartButton";
 import SystemTray from "./utility/SystemTray";
 import TimeAndDate from "./utility/TimeAndDate";
 import VolumeLevel from "./utility/VolumeLevel";
-import type { AppConfig } from "../features/AppLaunch";
+import type { AppConfig } from "../types/applicationTypes";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../store";
 
 interface TaskbarProps {
   apps: AppConfig[];
@@ -18,6 +20,8 @@ const Taskbar: React.FC<TaskbarProps> = ({ apps, onToggle }) => {
   const [openStart, setOpenStart] = useState(false);
   const startButtonRef = useRef<HTMLDivElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const titleColor = useSelector((state: RootState) => state.globalSettings.titleColor);
+
 
   const handleStartClick = () => {
     setOpenStart(prev => !prev);
@@ -42,14 +46,15 @@ const Taskbar: React.FC<TaskbarProps> = ({ apps, onToggle }) => {
       {openStart && (
         <StartContainer
           open={openStart}
+          setStartOpen={setOpenStart}
           ref={containerRef}
           buttonRef={startButtonRef}
         />
       )}
 
       <div
-        style={{ height: `${TASKBAR_HEIGHT}px` }}
-        className="relative w-full flex bg-[#dddbe3]/90 backdrop-blur-sm z-[101]"
+        style={{ height: `${TASKBAR_HEIGHT}px`, ...titleColor.style}}
+        className={`relative w-full flex ${titleColor.value} z-[101]`}
       >
         <div className="flex-1 h-full flex gap-[5px] items-center justify-center">
           <StartButton

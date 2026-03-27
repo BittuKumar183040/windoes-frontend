@@ -12,6 +12,7 @@ extend({ Container, Graphics });
 type Point = { x: number; y: number };
 
 const Canvas = () => {
+
   const [width] = useState(1696);
   const [height] = useState(570);
 
@@ -105,6 +106,7 @@ const Canvas = () => {
 
   return (
     <div
+      className="text-black"
       style={{
         width: "100%",
         height: "100%",

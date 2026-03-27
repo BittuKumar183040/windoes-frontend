@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
 import appLaunchReducer from './src/features/AppLaunch'
+import globalSettingsReducer from './src/features/GlobalSettings'
 
 export const store = configureStore({
   reducer: {
     appLaunch: appLaunchReducer,
+    globalSettings: globalSettingsReducer,
   },
 })
 

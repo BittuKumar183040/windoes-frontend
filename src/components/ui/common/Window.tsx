@@ -105,7 +105,7 @@ const Window = ({ children, onClose, onActive, onMinimize, windowTitle, titleHei
         bottomRight: (<div className={cornerClass} style={{ cursor: "url('/cursors/diagonal-resize-1_white.cur'), se-resize" }} />),
       }}
     >
-      <div className={`flex flex-col bg-[#f4f4f4] ${isFullScreen  ? "rounded-none" : "rounded-xl"} overflow-hidden border shadow-xl border-black/40 h-full`}>
+      <div className={`flex flex-col bg-transparent ${isFullScreen  ? "rounded-none" : "rounded-xl"} overflow-hidden border shadow-xl border-black/40 h-full`}>
         <Titlebar onClose={onClose} onMaximize={toggleMaximizeWindow} onMinimize={onMinimize} Title={Title} height={titleHeight} />
         {children}
       </div>

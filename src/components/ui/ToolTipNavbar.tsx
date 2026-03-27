@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../../store";
 
 type ToolTipNavbarProps = {
   anchorRef?: React.RefObject<HTMLElement | null>;
@@ -16,7 +18,7 @@ export default function ToolTipNavbar({
   children,
   visible = false,
   offset={ x:0, y: 16 },
-  className = " bg-[#e6e4e4] text-black py-2.5 px-4",
+  className = `py-2.5 px-4`,
   placement = "top",
   openDelayMs = 800,
 }: ToolTipNavbarProps) {
@@ -111,6 +113,8 @@ export default function ToolTipNavbar({
     computePosition();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible, placement, offset.x, offset.y, delayedVisible]);
+  
+  const themeColor = useSelector((state: RootState) => state.globalSettings.titleColor)
 
   useEffect(() => {
     if (!visible) return;
@@ -125,15 +129,15 @@ export default function ToolTipNavbar({
   }, [visible, placement, offset.x, offset.y]);
 
   if (typeof document === "undefined" || !document.body) return null;
-
   const tooltip = (
     <div
       ref={elRef}
       role="tooltip"
       aria-hidden={!delayedVisible}
-      className={`flex flex-col rounded-lg text-lg shadow-md ${className}`}
+      className={`flex flex-col rounded-lg text-lg shadow-md ${themeColor.value} ${className}`}
       style={{
         ...style,
+        ...themeColor.style,
         opacity: delayedVisible ? 1 : 0,
         transition: "opacity 200ms ease",
         pointerEvents: delayedVisible ? "auto" : "none",

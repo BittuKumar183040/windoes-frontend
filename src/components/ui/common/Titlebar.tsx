@@ -1,4 +1,6 @@
 import { Minus, Square, X } from 'lucide-react'
+import { useSelector } from 'react-redux';
+import type { RootState } from '../../../../store';
 
 const Titlebar = ({ Title = <p></p>, height, onClose, onMaximize, onMinimize}: { 
     Title: React.ReactNode; 
@@ -7,15 +9,15 @@ const Titlebar = ({ Title = <p></p>, height, onClose, onMaximize, onMinimize}: {
     onMaximize: () => void;
     onMinimize: () => void;
   }) => {
+  const titleColor = useSelector((state: RootState) => state.globalSettings.titleColor);
   return (
     <div
-      style={{height: height + "px", minHeight: height + "px"}}
-      className={` relative window-titlebar bg-linear-to-r from-[#d0dde6] to-[#e8e8e8] 
-        px-2 pr-44 select-none cursor-move`}
+      style={{height: height + "px", minHeight: height + "px", ...titleColor.style}}
+      className={` relative window-titlebar ${titleColor.value} px-2 pr-44 select-none cursor-move`}
       onDoubleClick={onMaximize}
     >
       {Title}
-      <div className=' absolute right-0 top-0 flex items-center text-black'>
+      <div className=' absolute right-0 top-0 flex items-center'>
         <button 
           onClick={onMinimize}
           className=" h-10 w-15 flex items-center justify-center hover:bg-gray-300/80">

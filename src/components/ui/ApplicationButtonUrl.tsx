@@ -38,10 +38,9 @@ const ApplicationButton: React.FC<ApplicationIconProps> = ({
         height: TASKBAR_ICON_SIZE_BOUND,
       }}
       className={`
-        relative flex items-center justify-center
-        rounded overflow-hidden bg-transparent 
+        relative flex items-center justify-center rounded overflow-hidden bg-transparent 
         ${isClosed ? "bg-white/0" : "bg-white/30"}
-        hover:bg-white/50 transition-colors duration-200 ease-in-out
+        hover:bg-black/30 transition-colors duration-200 ease-in-out
       `}
     >
       <div

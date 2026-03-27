@@ -3,6 +3,8 @@ import { DotIcon, X } from "lucide-react";
 import Footer from "./Footer";
 import Window from "../../components/ui/common/Window";
 import type { AppComponentsProps } from "../../types/applicationTypes";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../../store";
 
 // Derives plain text from an HTML string without relying on component state.
 const getPlainText = (html: string): string => {
@@ -12,8 +14,12 @@ const getPlainText = (html: string): string => {
 };
 
 const Menubar = () => {
+  const themeColor = useSelector((state: RootState) => state.globalSettings.titleColor)
   return (
-    <header className="flex justify-center px-2 h-[33px] text-black bg-[#f8f8f8] border-b border-gray-200">
+    <header 
+      className={`flex justify-center px-2 h-[33px] border-b 
+        ${themeColor.theme === "light" ? "text-black bg-[#f8f8f8] border-gray-200/80" : "text-white bg-black border-gray-200/10"}
+      `}>
       <div className="flex gap-3">
         <button className="px-5 h-full text-xl rounded-md hover:bg-gray-200/80 transition-all">
           File
@@ -35,7 +41,8 @@ const STORAGE_KEY_PREFIX = "notepad-state";
 const Notepad: React.FC<AppComponentsProps> = ({ isActive, app, onClose, onActive, onMinimize, windowTitle }) => {
   const storageKey = `${STORAGE_KEY_PREFIX}:${windowTitle}${app.id ? ":" + app.id : ""}`;
   const editorRef = useRef<HTMLDivElement | null>(null);
-  console.log(app)
+  const themeColor = useSelector((state: RootState) => state.globalSettings.titleColor)
+
   // Single source of truth — raw HTML from the contentEditable editor.
   const [textHtml, setTextHtml] = useState<string>("");
   const [cursor, setCursor] = useState<number>(0);
@@ -167,7 +174,9 @@ const Notepad: React.FC<AppComponentsProps> = ({ isActive, app, onClose, onActiv
           <div
             onMouseEnter={handleEnter}
             onMouseLeave={handleLeave}
-            className="inner-rounded no-drag relative flex items-center text-md h-[30px] w-80 min-w-3 pl-6 pr-18 whitespace-nowrap rounded-t-lg text-black bg-[#f8f8f8]"
+            className={`inner-rounded no-drag relative flex items-center text-md h-[30px] w-80 min-w-3 pl-6 pr-18 whitespace-nowrap rounded-t-lg 
+              ${themeColor.theme === "light" ? "text-black bg-[#f8f8f8]" : "text-white bg-black"}
+            `}
           >
             <p className="font-semibold text-[12px]">
               {app?.node?.name ? app.node.name : plainText.trimEnd().length > 1 ? plainText.slice(0, 35) : "Untitled"}
@@ -176,14 +185,18 @@ const Notepad: React.FC<AppComponentsProps> = ({ isActive, app, onClose, onActiv
               {tabShowCloseBtn || plainText.trimEnd().length < 1 ? (
                 <button
                   onClick={handleTabCloseClick}
-                  className="flex items-center text-gray-800 justify-center h-9 w-12 group mr-4 bg-[#f8f8f8] hover:bg-gray-200 outline-6 -outline-offset-1 outline-[#f8f8f8] rounded-md"
+                  className={`flex items-center justify-center h-9 w-12 group mr-4 outline-6 -outline-offset-1 rounded-md
+                    ${themeColor.theme === "light" ? "bg-[#f8f8f8] hover:bg-gray-200 outline-[#f8f8f8] text-gray-800 " : "bg-gray-800 hover:bg-gray-700 outline-[#0b0b0b] text-gray-100 " }
+                  `}
                 >
                   <X size={15} strokeWidth={1} />
                 </button>
               ) : (
                 <button
                   onClick={() => setShowCloseDialog(true)}
-                  className="flex items-center text-gray-800 justify-center h-9 w-12 group mr-4 bg-[#f8f8f8] hover:bg-gray-200 outline-6 -outline-offset-1 outline-[#f8f8f8] rounded-md"
+                  className={`flex items-center justify-center h-9 w-12 group mr-4 outline-6 -outline-offset-1 rounded-md
+                    ${themeColor.theme === "light" ? "bg-[#f8f8f8] hover:bg-gray-200 outline-[#f8f8f8] text-gray-800 " : "bg-gray-800 hover:bg-gray-700 outline-[#0b0b0b] text-gray-100 " }
+                  `}
                 >
                   <DotIcon className="scale-150" />
                 </button>
@@ -203,7 +216,9 @@ const Notepad: React.FC<AppComponentsProps> = ({ isActive, app, onClose, onActiv
         onInput={handleChange}
         onClick={handleCursorEvent}
         onKeyUp={handleCursorEvent}
-        className="flex-1 input bg-[#f9f9f9] outline-none border-none overflow-auto text-black pl-6 pt-5"
+        className={`flex-1 input outline-none border-none overflow-auto pl-6 pt-5
+          ${themeColor.theme === "light" ? "bg-[#f8f8f8] outline-[#f8f8f8] text-gray-800 " : "bg-black  text-gray-100 " }
+        `}
       />
 
       <Footer text={plainText} cursor={cursor} />

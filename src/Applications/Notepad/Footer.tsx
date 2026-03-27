@@ -1,9 +1,13 @@
+import { useSelector } from "react-redux";
+import type { RootState } from "../../../store";
+
 interface FooterProps {
   text: string;
   cursor: number;
 }
 
 const Footer = ({ text, cursor }: FooterProps) => {
+  const themeColor = useSelector((state: RootState) => state.globalSettings.titleColor)
 
   const calculateChar = (s: string) => {
     const len = s.trimEnd().length;
@@ -41,13 +45,15 @@ const Footer = ({ text, cursor }: FooterProps) => {
   const { line, column } = calculateLineCol(text, cursor);
 
   return (
-    <footer className="flex justify-between items-center text-gray-600 bg-[#f8f8f8] border-t border-gray-200 p-2">
+    <footer 
+      style={{...themeColor.style}}
+      className={`flex justify-between items-center ${themeColor.value} border-t border-gray-200/40 p-2`}>
       <p className="pl-4 pr-10 whitespace-nowrap w-30">Ln {line}, Col {column}</p>
-      <p className="border-l px-3 min-w-36 border-gray-200 whitespace-nowrap">{calculateChar(text)}</p>
-      <p className="flex-1 border-l px-3 border-gray-200 whitespace-nowrap">Plain text</p>
-      <p className="border-l px-3 pr-8 border-gray-200 whitespace-nowrap">100%</p>
-      <p className="border-l px-3 pr-15 border-gray-200 whitespace-nowrap">Windows (CRLF)</p>
-      <p className="border-l px-3 pr-20 border-gray-200 whitespace-nowrap">UTF-8</p>
+      <p className="border-l px-3 min-w-36 border-gray-200/40 whitespace-nowrap">{calculateChar(text)}</p>
+      <p className="flex-1 border-l px-3 border-gray-200/40 whitespace-nowrap">Plain text</p>
+      <p className="border-l px-3 pr-8 border-gray-200/40 whitespace-nowrap">100%</p>
+      <p className="border-l px-3 pr-15 border-gray-200/40 whitespace-nowrap">Windows (CRLF)</p>
+      <p className="border-l px-3 pr-20 border-gray-200/40 whitespace-nowrap">UTF-8</p>
     </footer>
   );
 };

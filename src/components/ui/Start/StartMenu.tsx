@@ -7,21 +7,24 @@ import { useNavigate } from "react-router-dom";
 import { getUserProfileImage } from "../../../api/user.api";
 import { UserProfileImage } from "../UserProfile";
 import { getUserFromLocal } from "../../utility/helper/localstorage";
+import { useDispatch } from "react-redux";
+import { addNewApp } from "../../../features/AppLaunch";
 
 type StartMenuProps = {
   open: boolean;
+  setStartOpen: (arg0: boolean) => void;
   buttonRef: React.RefObject<HTMLDivElement | null>;
 };
 
 const StartMenu = forwardRef<HTMLDivElement, StartMenuProps>(
-  ({ open, buttonRef }, ref) => {
+  ({ open, setStartOpen, buttonRef }, ref) => {
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const user = getUserFromLocal();
     const startContainerRef = useRef<HTMLDivElement | null>(null);
     const profileDetailsRef = useRef<HTMLDivElement | null>(null);
     const [logo, setLogo] = useState<string>("");
     const [showProfile, setShowProfile] = useState(false);
-
     useImperativeHandle(ref, () => startContainerRef.current as HTMLDivElement);
     useEffect(() => {
       if (!user?.id) return;
@@ -65,14 +68,31 @@ const StartMenu = forwardRef<HTMLDivElement, StartMenuProps>(
       window.close();
     }
 
+    const settingsClick = () => {
+      setStartOpen(false)
+      dispatch(addNewApp({
+        id: "settings",
+        type: "settings",
+        name: "Setting",
+        icon: "./icons/settings.png",
+        isPinned: false,
+        data: "",
+        isActive: true,
+        isClosed: false,
+        isMinimized: false,
+        isMaximized: false,
+        zIndex: 1,
+      }))
+    }
+
     return (
-      <ToolTipNavbar className="w-11/12 md:w-6/12 p-0 mx-auto overflow-hidden bg-transparent text-black backdrop-blur-sm" anchorRef={buttonRef} visible={open} placement="top" openDelayMs={0}>
+      <ToolTipNavbar className={`w-11/12 md:w-6/12 p-0 mx-auto overflow-hidden`} anchorRef={buttonRef} visible={open} placement="top" openDelayMs={0}>
         <div ref={startContainerRef}>
           <AnimatePresence>
             {showProfile &&
               <motion.div 
                 ref={profileDetailsRef} 
-                className=" absolute bottom-[60px] space-y-4 p-4 left-10 w-[300px] bg-[#dddbe3]/80 backdrop-blur-md rounded-2xl 
+                className=" absolute bottom-[60px] space-y-4 p-4 left-10 w-[300px] bg-black/20 backdrop-blur-md rounded-2xl 
                  shadow-xl
                 "
                 initial={{ y: 30, opacity: 0 }}
@@ -97,13 +117,13 @@ const StartMenu = forwardRef<HTMLDivElement, StartMenuProps>(
               </motion.div>
             }
           </AnimatePresence>
-          <div className="flex flex-col py-4 px-12 bg-[#dddbe3]/90 h-96">
+          <div className={`flex flex-col py-4 px-12 h-96`}>
             <div className="flex items-center justify-between w-full">
               <strong>Recommended</strong>
               <button>More</button>
             </div>
             <div className=" grid grid-cols-2">
-              <div className="flex items-center gap-4 p-3 hover:bg-gray-100/30 rounded-md">
+              <div className="flex items-center gap-4 p-3 hover:bg-black/20 rounded-md">
                 <div className="w-10 h-10 flex items-center justify-center border rounded-full">
                   <span className="">BK</span>
                 </div>
@@ -112,7 +132,7 @@ const StartMenu = forwardRef<HTMLDivElement, StartMenuProps>(
                   <p>Description</p>
                 </div>
               </div>
-              <div className="flex items-center gap-4 p-3 hover:bg-gray-100/30 rounded-md">
+              <div className="flex items-center gap-4 p-3 hover:bg-black/20 rounded-md">
                 <div className="w-10 h-10 flex items-center justify-center border rounded-full">
                   <span className="">BK</span>
                 </div>
@@ -124,18 +144,18 @@ const StartMenu = forwardRef<HTMLDivElement, StartMenuProps>(
             </div>
           </div>
 
-          <div className="flex items-center justify-between py-4 px-12 bg-[#dddbe3]/85">
+          <div className={`flex items-center justify-between py-4 px-12 bg-black/10`}>
             <div className={`${showProfile && "pointer-events-none"} `}>
               <UserProfile label={user?.name} src={logo} onClick={handleProfileClick} />
             </div>
             <div className="flex items-center">
-              <button className="flex gap-4 p-4 rounded-md hover:bg-gray-100/70 transition" >
+              <button className="flex gap-4 p-4 rounded-md hover:bg-black/20 transition" >
                 <Download strokeWidth={1} size={18} />
               </button>
-              <button className="flex gap-4 p-4 rounded-md hover:bg-gray-100/70 transition" >
+              <button onClick={settingsClick} className="flex gap-4 p-4 rounded-md hover:bg-black/20 transition" >
                 <Settings strokeWidth={1} size={18} />
               </button>
-              <button className="flex gap-4 p-4 rounded-md hover:bg-gray-100/70 transition" >
+              <button className="flex gap-4 p-4 rounded-md hover:bg-black/20 transition" >
                 <Power onClick={shutdown} strokeWidth={1} size={18} />
               </button>
             </div>

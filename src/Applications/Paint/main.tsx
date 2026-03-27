@@ -2,18 +2,24 @@ import { useState } from "react";
 import Window from "../../components/ui/common/Window";
 import Canvas from "./Canvas";
 import type { AppComponentsProps } from "../../types/applicationTypes";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../../store";
 
 const Menubar = () => {
+  const titleColor = useSelector((state: RootState) => state.globalSettings.titleColor);
+
   return (
-    <header className="flex justify-center px-2 min-h-[33px] text-black bg-linear-to-r from-[#d0dde6] to-[#e8e8e8] border-b border-gray-200">
+    <header 
+      style={{...titleColor.style}}
+      className={`flex justify-center px-2 min-h-[33px] ${titleColor.value} border-b border-gray-200`}>
       <div className="flex gap-3">
-        <button className="px-5 h-full text-xl rounded-md hover:bg-gray-200/80 transition-all">
+        <button className="px-5 h-full text-xl rounded-md hover:bg-black/10 transition-all">
           File
         </button>
-        <button className="px-5 h-full text-xl rounded-md hover:bg-gray-200/80 transition-all">
+        <button className="px-5 h-full text-xl rounded-md hover:bg-black/10 transition-all">
           Edit
         </button>
-        <button className="px-5 h-full text-xl rounded-md hover:bg-gray-200/80 transition-all">
+        <button className="px-5 h-full text-xl rounded-md hover:bg-black/10 transition-all">
           View
         </button>
       </div>
@@ -47,7 +53,7 @@ const Paint: React.FC<AppComponentsProps> = ({ isActive, onClose, onActive, onMi
       titleHeight={28}
       Title={<div className="flex items-center gap-3 h-full">
           <img src="icons/paint.png" className="no-drag size-7" />
-          <div className="text-lg whitespace-nowrap text-black">Untitled - Paint</div>
+          <div className="text-lg whitespace-nowrap">Untitled - Paint</div>
         </div>
       }
     >

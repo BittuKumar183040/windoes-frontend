@@ -1,4 +1,4 @@
-import type { AppConfig } from "../../../features/AppLaunch"
+import type { AppConfig } from "../../../types/applicationTypes";
 import { getExtension } from "./extensionFinder"
 
 export const AppFinderForTaskbar = (fileName: string): AppConfig | null => {

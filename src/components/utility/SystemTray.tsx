@@ -20,10 +20,10 @@ const SystemTray: React.FC<SystemTrayProps> = ({ active, onClick }) => {
         height: TASKBAR_ICON_SIZE_BOUND,
         width: 30
       }}
-      className={`text-black flex gap-3 justify-center items-center
+      className={` flex gap-3 justify-center items-center
         rounded tracking-wider
         ${active ? "bg-white/30" : "bg-white/0"}
-        hover:bg-white/50 transition-colors duration-200 ease-in-out
+        hover:bg-black/20 transition-colors duration-200 ease-in-out
     `}>
       <ChevronUp size={TASKBAR_SYSTEM_TRAY_ICON_SIZE} />
     </div>

@@ -1,22 +1,5 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import type { Node } from '../Applications/FileManager/types/node';
-
-export type AppType = "fileManager" | "notepad" | "paint";
-
-export interface AppConfig {
-  id: string;
-  type: AppType;
-  name: string;
-  icon: string;
-  isPinned: boolean,
-  isActive: boolean;
-  isClosed: boolean;
-  isMinimized: boolean;
-  isMaximized: boolean;
-  zIndex?: number;
-  data?: string;
-  node?: Node,
-}
+import type { AppConfig } from '../types/applicationTypes';
 
 const initialState: AppConfig[] = [
   {

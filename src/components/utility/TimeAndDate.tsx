@@ -67,10 +67,10 @@ const TimeAndDate: React.FC<TimeAndDateProps> = ({ active, onClick }) => {
       style={{
         height: TASKBAR_ICON_SIZE_BOUND,
       }}
-      className={`text-black flex flex-col justify-center items-end
+      className={`flex flex-col justify-center items-end
         rounded p-2 px-2.5 tracking-wider
         ${active ? "bg-white/30" : "bg-white/0"}
-        hover:bg-white/50 transition-colors duration-200 ease-in-out
+        hover:bg-black/10 transition-colors duration-200 ease-in-out
     `}>
       <p>{time}</p>
       <p>{date}</p>

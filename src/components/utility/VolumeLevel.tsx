@@ -56,10 +56,10 @@ const VolumeLevel: React.FC<VolumeLevelProps> = ({ active, onClick }) => {
         height: TASKBAR_ICON_SIZE_BOUND,
         width: "54px"
       }}
-      className={`text-black flex gap-3 justify-center items-center
+      className={`flex gap-3 justify-center items-center
         rounded tracking-wider
         ${active ? "bg-white/30" : "bg-white/0"}
-        hover:bg-white/50 transition-colors duration-200 ease-in-out
+        hover:bg-black/20 transition-colors duration-200 ease-in-out
         `}>
       <Wifi absoluteStrokeWidth={true} strokeWidth={1.1} size={TASKBAR_SYSTEM_TRAY_ICON_SIZE} />
       

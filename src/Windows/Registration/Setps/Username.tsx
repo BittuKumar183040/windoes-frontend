@@ -104,6 +104,7 @@ const Username = ({ onNext, onPrev }: RegistrationStepProps) => {
               color: "black",
               boxShadow: "0px 1px 0 rgb(23, 96, 253)",
             }}
+            enableEnter={false}
             loaderStyle="text-black"
           />
 

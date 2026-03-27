@@ -37,10 +37,9 @@ const StartButton = forwardRef<HTMLDivElement, StartButtonProps>(({ active, onCl
         width: TASKBAR_ICON_SIZE_BOUND - 1,
         height: TASKBAR_ICON_SIZE_BOUND,
       }}
-      className={` flex items-center justify-center shrink-0
-        p-2 rounded overflow-hidden w-fit bg-transparent
+      className={` flex items-center justify-center shrink-0 p-2 rounded overflow-hidden w-fit bg-transparent
         ${active ? "bg-white/30" : "bg-white/0"}
-        hover:bg-white/50 transition-colors duration-200 ease-in-out
+        hover:bg-black/30 transition-colors duration-200 ease-in-out
       `}
     >
       <StartIcon cardSize={TASKBAR_START_LEAF_SIZE} radius={TASKBAR_ICON_RADIUS} />
