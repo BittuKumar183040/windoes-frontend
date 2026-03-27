@@ -82,7 +82,8 @@ const Navigation = () => {
 
   return (
     <div
-      className={`min-h-[48px] flex justify-between items-center border-b border-black/20`}>
+      style={{...themeColor.style}}
+      className={`min-h-[48px] ${themeColor.value} flex justify-between items-center border-b border-black/20`}>
       <div className="flex gap-4 px-4 items-center">
         <NavigationButton Icon={ArrowLeft} isRoot={isRoot} onClick={handleBack}/>
         <NavigationButton Icon={ArrowRight} isRoot={isRoot} onClick={handleForward} />
@@ -93,7 +94,7 @@ const Navigation = () => {
       <div
         ref={addressBarRef}
         className={`relative h-[32px] flex flex-1 items-center text-xl mr-2 rounded-md transition-all
-          ${themeColor.theme === "light" ? "text-black bg-linear-to-b from-white to-transparent": "text-white bg-linear-to-b from-gray-400/20 to-transparent"}
+          ${themeColor.theme === "light" ? "text-black bg-linear-to-b from-white to-white/80": "text-white bg-linear-to-b from-gray-400/20 to-transparent"}
         `}
       >
         <div className={` absolute left-0 z-10 flex items-center gap-3 ${addressBarActive ? "opacity-0" : "opacity-100"}`}>
