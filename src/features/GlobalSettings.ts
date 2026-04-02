@@ -6,7 +6,9 @@ type GlobalSettingsState = {
 };
 
 const initialState: GlobalSettingsState = {
-  titleColor: TITLE_COLOR_PRESETS[0],
+  titleColor: localStorage.getItem("themeIndex")
+    ? JSON.parse(localStorage.getItem("themeIndex") || "{}").titleColor
+    : TITLE_COLOR_PRESETS[0],
 };
 
 const globalSettingsSlice = createSlice({
@@ -23,11 +25,15 @@ const globalSettingsSlice = createSlice({
     setTitleColor(state, action: PayloadAction<TypeTheme>) {
       state.titleColor = action.payload;
       const theme = action.payload.theme
+      
       if(theme === "dark") {
         document.documentElement.classList.add("dark");
       } else {
         document.documentElement.classList.remove("dark");
       }
+      localStorage.setItem("themeIndex", JSON.stringify({
+        titleColor: action.payload,
+      }));
     },
   },
 });

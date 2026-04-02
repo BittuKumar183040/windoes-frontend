@@ -1,9 +1,9 @@
 export interface TypeTheme {
   label: string;
   theme: "dark" | "light";
-  value: string;       // Tailwind utility classes (non-dynamic only)
-  preview: string;     // Used for swatches
-  style: React.CSSProperties;  // Runtime gradient goes here
+  value: string;
+  preview: string; 
+  style: React.CSSProperties;
 }
 
 const tc = (from: string, to: string, alpha = "0.95"): TypeTheme["style"] => ({
@@ -12,7 +12,6 @@ const tc = (from: string, to: string, alpha = "0.95"): TypeTheme["style"] => ({
   WebkitBackdropFilter: "blur(8px)",
 });
 
-// Convert decimal alpha "0.95" → hex "F2" appended to hex color
 const alphaToHex = (alpha: string) =>
   Math.round(parseFloat(alpha) * 255).toString(16).padStart(2, "0").toUpperCase();
 
