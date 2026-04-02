@@ -5,35 +5,13 @@ import Window from "../../components/ui/common/Window";
 import type { AppComponentsProps } from "../../types/applicationTypes";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../../store";
+import Menubar from "../../components/ui/Menubar/Menubar";
 
 // Derives plain text from an HTML string without relying on component state.
 const getPlainText = (html: string): string => {
   const el = document.createElement("div");
   el.innerHTML = html;
   return el.innerText;
-};
-
-const Menubar = () => {
-  const themeColor = useSelector((state: RootState) => state.globalSettings.titleColor)
-  return (
-    <header 
-      className={`flex justify-center px-2 h-[33px] border-b 
-        ${themeColor.theme === "light" ? "text-black bg-[#f8f8f8] border-gray-200/80" : "text-white bg-black border-gray-200/10"}
-      `}>
-      <div className="flex gap-3">
-        <button className="px-5 h-full text-xl rounded-md hover:bg-gray-200/80 transition-all">
-          File
-        </button>
-        <button className="px-5 h-full text-xl rounded-md hover:bg-gray-200/80 transition-all">
-          Edit
-        </button>
-        <button className="px-5 h-full text-xl rounded-md hover:bg-gray-200/80 transition-all">
-          View
-        </button>
-      </div>
-      <div className="flex flex-1" />
-    </header>
-  );
 };
 
 const STORAGE_KEY_PREFIX = "notepad-state";
